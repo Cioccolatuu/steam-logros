@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Logros Steam · Cioccolatuu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--g:rgba(255,255,255,.055);--b:rgba(255,255,255,.11);--t:#e8edf5;--m:#8b95a7;--c:#22d3ee;--gr:#34d399;--au:#fbbf24;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--t);font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(900px 500px at 8% -10%,#0b3a4a66,transparent),radial-gradient(800px 500px at 100% 0,#3a0b4a44,transparent),#000}
+h1,h2,.num,.nm{font-family:"Chakra Petch","Segoe UI",sans-serif}
+main{max-width:1200px;margin:0 auto;padding:20px 16px 60px}
+.gl{background:var(--g);border:1px solid var(--b);border-radius:16px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+header{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;margin-bottom:18px}
+h1{margin:0;font-size:28px}h1 span{color:var(--c);text-shadow:0 0 18px var(--c)}
+.sub{color:var(--m);font-size:13px}
+h2{font-size:18px;margin:26px 0 10px}
+button,select,input{font:inherit;color:inherit}
+button{background:var(--g);border:1px solid var(--b);border-radius:10px;padding:7px 12px;cursor:pointer;transition:.2s}
+button:hover{border-color:var(--c);box-shadow:0 0 12px #22d3ee44}
+button.on{border-color:var(--c);background:#22d3ee22}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--c);outline-offset:2px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.st{padding:14px 16px}.num{font-size:30px;font-weight:700}.lb{color:var(--m);font-size:13px}
+.q{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.slot{padding:12px;min-height:130px;display:flex;gap:12px;align-items:center}
+.slot.empty{border-style:dashed;color:var(--m);justify-content:center;text-align:center}
+.slot img{width:130px;border-radius:10px}.slot .rk{font:700 26px "Chakra Petch";color:var(--au)}
+.ctl{display:flex;flex-wrap:wrap;gap:8px;padding:12px;align-items:center}
+.ctl input[type=search]{flex:1 1 200px;background:#0006;border:1px solid var(--b);border-radius:10px;padding:8px 12px}
+select{background:#111;border:1px solid var(--b);border-radius:10px;padding:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;align-items:start}
+.card{overflow:hidden;transition:transform .25s,box-shadow .25s}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 30px #0009,0 0 0 1px #22d3ee55}
+.card.done{border-color:#fbbf2488;box-shadow:0 0 22px #fbbf2422}
+.card.flash{animation:fl 1.2s 2}
+@keyframes fl{50%{box-shadow:0 0 30px var(--c)}}
+.head{cursor:pointer}
+.head img{display:block;width:100%;aspect-ratio:460/215;object-fit:cover;background:#111}
+.in{padding:12px 14px}
+.nm{font-weight:700;font-size:17px;margin-bottom:6px}
+.bar{height:8px;border-radius:9px;background:#ffffff14;overflow:hidden;margin:8px 0}
+.bar i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,var(--c),var(--gr));box-shadow:0 0 10px var(--c);transition:width .8s}
+.done .bar i{background:linear-gradient(90deg,#f59e0b,#fde68a,#f59e0b);background-size:200%;box-shadow:0 0 12px var(--au);animation:sh 2.5s linear infinite}
+@keyframes sh{to{background-position:200%}}
+.meta{display:flex;flex-wrap:wrap;gap:4px 12px;color:var(--m);font-size:13px}
+.bd{display:inline-block;font-size:12px;border-radius:99px;padding:2px 9px;margin:6px 4px 0 0;border:1px solid var(--b)}
+.bd.au{color:var(--au);border-color:#fbbf2466}.bd.ul{color:#f472b6;border-color:#f472b666}
+.act{display:flex;gap:6px;padding:0 14px 12px;flex-wrap:wrap}
+.act a{color:var(--t);text-decoration:none;background:var(--g);border:1px solid var(--b);border-radius:10px;padding:7px 12px}
+.acc{display:grid;grid-template-rows:0fr;transition:grid-template-rows .35s}
+.open .acc{grid-template-rows:1fr}.acc>div{overflow:hidden}
+.al{padding:0 14px}.sw{display:flex;gap:6px;align-items:center;color:var(--m);font-size:13px;padding:6px 14px}
+.ach{display:flex;gap:10px;padding:8px 0;border-top:1px solid var(--b);font-size:13px}
+.ach.no{opacity:.72}.ach>b{color:var(--gr)}.ach.no>b{color:var(--m)}
+.ach small{color:var(--m)}.ach .r{margin-left:auto;text-align:right;white-space:nowrap}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);padding:10px 18px;opacity:0;pointer-events:none;transition:.3s;z-index:5;background:#000c}
+#toast.s{opacity:1}
+#cf{position:fixed;inset:0;pointer-events:none;z-index:9}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="cf"></canvas>
+<main>
+<header>
+  <div><h1>Logros de <span>Cioccolatuu</span></h1><div class="sub" id="upd">Cargando…</div></div>
+  <button data-a="snd" id="snd"></button>
+</header>
+
+<section class="stats" id="stats"></section>
+
+<h2>Próximos platinos</h2>
+<section class="q" id="queue"></section>
+<p><button data-a="exp">Copiar widget para README</button></p>
+
+<h2>Biblioteca</h2>
+<section class="ctl gl">
+  <input type="search" id="q" placeholder="Buscar juego…" aria-label="Buscar juego">
+  <select id="sort" aria-label="Ordenar">
+    <option value="plat">Platinados primero</option>
+    <option value="nplat">No platinados primero</option>
+    <option value="az">Nombre A–Z</option>
+    <option value="za">Nombre Z–A</option>
+  </select>
+  <button data-a="near" id="near">Cerca del platino (80%+)</button>
+  <button data-a="df" data-v="easy" id="df-easy">Fáciles</button>
+  <button data-a="df" data-v="hard" id="df-hard">Hardcore</button>
+  <button data-a="rnd">🎲 Aleatorio</button>
+</section>
+<p class="sub" id="count"></p>
+<section class="grid" id="grid"></section>
+</main>
+<div id="toast" class="gl"></div>
+
+<script>
+// ===== CONFIG: tu Gist (siempre la última versión) =====
+const DATA_URL="https://gist.githubusercontent.com/Cioccolatuu/5a48a8fdfd3590ee577e81916d0f0c7a/raw/logros_steam.json";
+
+// ===== Utilidades =====
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const ls={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}};
+const cmp=(a,b)=>a.juego.localeCompare(b.juego,"es");
+const fd=d=>d.toLocaleDateString("es-CL");
+const cover=id=>`https://cdn.cloudflare.steamstatic.com/steam/apps/${id}/header.jpg`;
+
+// ===== Estado =====
+const S={games:[],q:"",sort:"plat",near:false,diff:"",queue:ls.get("queue",[]),sound:ls.get("sound",true),open:new Set(),pf:{}};
+
+// ===== Datos de ejemplo (si el Gist no responde) =====
+const mk=(a,n,h,u,p)=>({appid:a,juego:n,horas_jugadas:h,logros_total:u+p,logros_desbloqueados:u,completado_pct:Math.round(u/(u+p)*1000)/10,
+ desbloqueados:Array.from({length:u},(_,i)=>({nombre:"Logro "+(i+1),descripcion:"Descripción de ejemplo",fecha:`2026-0${1+i%9}-1${i%9} 20:00`,rareza_global_pct:+(60/(i+1)+1).toFixed(1)})),
+ pendientes:Array.from({length:p},(_,i)=>({nombre:"Pendiente "+(i+1),descripcion:"Cómo obtenerlo (ejemplo)",oculto:false,rareza_global_pct:+(3+i).toFixed(1)}))});
+const DEMO={actualizado:"datos de ejemplo",juegos:[mk(1245620,"ELDEN RING",120,30,12),mk(367520,"Hollow Knight",60,63,0),mk(1145360,"Hades",45,40,8)]};
+
+// ===== Cálculos por juego =====
+function prep(g){
+  const all=g.desbloqueados.concat(g.pendientes).filter(x=>x.rareza_global_pct>0);
+  const avg=all.length?all.reduce((s,x)=>s+(100-x.rareza_global_pct),0)/all.length:50;
+  g.dif=Math.min(10,Math.max(1,+(avg/10).toFixed(1)));          // 1–10 según rareza global
+  g.plat=g.completado_pct>=100;
+  g.lph=g.horas_jugadas>0?(g.logros_desbloqueados/g.horas_jugadas).toFixed(2):"—";
+  const ds=g.desbloqueados.map(x=>x.fecha&&new Date(x.fecha.replace(" ","T"))).filter(Boolean);
+  if(g.plat&&ds.length){g.last=new Date(Math.max(...ds));g.first=new Date(Math.min(...ds));g.span=Math.round((g.last-g.first)/864e5)}
+  return g;
+}
+
+// ===== Sonido y confeti =====
+function beep(seq){if(!S.sound)return;try{const a=new(window.AudioContext||window.webkitAudioContext)();seq.forEach((f,i)=>{const o=a.createOscillator(),g=a.createGain(),t=a.currentTime+i*.1;o.type="square";o.frequency.value=f;g.gain.setValueAtTime(.05,t);g.gain.exponentialRampToValueAtTime(.001,t+.18);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+.2)})}catch{}}
+function confetti(){const c=$("#cf"),x=c.getContext("2d");c.width=innerWidth;c.height=innerHeight;
+ const P=Array.from({length:150},()=>({x:innerWidth/2,y:innerHeight/3,vx:(Math.random()-.5)*15,vy:-2-Math.random()*12,s:4+Math.random()*5,r:Math.random()*6,k:["#fbbf24","#fde68a","#f59e0b","#fff"][Math.random()*4|0]}));
+ let n=0;(function f(){x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.r+=.2;x.fillStyle=p.k;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);x.restore()});
+ if(++n<160)requestAnimationFrame(f);else x.clearRect(0,0,c.width,c.height)})()}
+function celebrate(){confetti();beep([523,659,784,1047])}
+let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("s");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("s"),2800)}
+
+// ===== Render =====
+function visible(){
+  let l=S.games.filter(g=>g.juego.toLowerCase().includes(S.q.toLowerCase()));
+  if(S.near)l=l.filter(g=>g.completado_pct>=80&&!g.plat);
+  if(S.diff==="easy")l=l.filter(g=>g.dif<=4.5);
+  if(S.diff==="hard")l=l.filter(g=>g.dif>=6);
+  const rest=f=>l.filter(f).sort(cmp);
+  if(S.sort==="plat")return rest(g=>g.plat).concat(rest(g=>!g.plat));
+  if(S.sort==="nplat")return rest(g=>!g.plat).concat(rest(g=>g.plat));
+  return l.sort((a,b)=>S.sort==="az"?cmp(a,b):cmp(b,a));
+}
+function renderStats(){
+  const G=S.games,tot=G.reduce((s,g)=>s+g.logros_total,0),unl=G.reduce((s,g)=>s+g.logros_desbloqueados,0);
+  const d=G.length?(G.reduce((s,g)=>s+g.dif,0)/G.length).toFixed(1):"—";
+  const it=[[G.length,"Juegos con logros"],[G.filter(g=>g.plat).length,"Platinados (100%)"],[unl.toLocaleString("es-CL"),"Logros desbloqueados"],[(tot?unl/tot*100:0).toFixed(1)+"%","Completitud global"],[d+"/10","Dificultad media (según rareza)"]];
+  $("#stats").innerHTML=it.map(([n,l])=>`<div class="st gl"><div class="num">${n}</div><div class="lb">${l}</div></div>`).join("");
+}
+function renderQueue(){
+  const el=[0,1,2].map(i=>{const g=S.games.find(x=>x.appid===S.queue[i]);
+   if(!g)return`<div class="slot gl empty">Espacio #${i+1} libre.<br>Marca ⭐ en un juego para añadirlo.</div>`;
+   return`<div class="slot gl"><span class="rk">#${i+1}</span><img src="${cover(g.appid)}" alt="" onerror="this.style.display='none'">
+   <div><div class="nm">${esc(g.juego)}</div><div class="sub">${g.completado_pct}% · faltan ${g.logros_total-g.logros_desbloqueados}</div>
+   <button data-a="cf" data-id="${g.appid}">Confirmar platino</button></div></div>`});
+  $("#queue").innerHTML=el.join("");
+}
+function achList(g){
+  const pf=S.pf[g.appid]!==false;
+  const L=g.pendientes.map(x=>({...x,ok:0})),U=g.desbloqueados.map(x=>({...x,ok:1}));
+  return(pf?L.concat(U):U.concat(L)).map(a=>`<div class="ach ${a.ok?"":"no"}"><b>${a.ok?"✓":"○"}</b>
+   <div><b>${esc(a.nombre)}</b>${a.rareza_global_pct>0&&a.rareza_global_pct<5?' <span class="bd ul">Ultra raro</span>':""}<br><small>${esc(a.descripcion||"—")}</small></div>
+   <small class="r">${a.rareza_global_pct}%${a.fecha?"<br>"+esc(a.fecha.slice(0,10)):""}</small></div>`).join("");
+}
+function card(g){
+  const o=S.open.has(g.appid),q=S.queue.indexOf(g.appid);
+  const guide="https://www.google.com/search?q="+encodeURIComponent(g.juego+" guía logros 100%");
+  const rec=g.plat&&g.last?`<span class="bd au">🏆 Platino ${fd(g.last)}${g.span!=null?" · "+g.span+" días desde el primer logro":""}</span>`:"";
+  return`<article class="card gl ${g.plat?"done":""} ${o?"open":""}" id="g${g.appid}">
+  <div class="head" data-a="tg" data-id="${g.appid}"><img loading="lazy" src="${cover(g.appid)}" alt="" onerror="this.style.display='none'">
+   <div class="in"><div class="nm">${esc(g.juego)}</div>
+   <div class="bar"><i style="width:${g.completado_pct}%"></i></div>
+   <div class="meta"><span>${g.completado_pct}% (${g.logros_desbloqueados}/${g.logros_total})</span><span>${g.horas_jugadas} h</span><span>${g.lph} logros/h</span><span>Dif. ${g.dif}/10</span></div>${rec}</div></div>
+  <div class="act"><button data-a="q" data-id="${g.appid}" class="${q>=0?"on":""}">${q>=0?"⭐ En cola #"+(q+1):"☆ Siguiente platino"}</button>
+   <a href="${guide}" target="_blank" rel="noopener" data-a="x">📖 Guía</a></div>
+  <div class="acc"><div><label class="sw"><input type="checkbox" data-a="sw" data-id="${g.appid}" ${S.pf[g.appid]!==false?"checked":""}> Pendientes primero</label>
+  <div class="al" id="al${g.appid}">${o?achList(g):""}</div></div></div></article>`;
+}
+function renderGrid(){const l=visible();$("#count").textContent=`Mostrando ${l.length} de ${S.games.length} juegos`;$("#grid").innerHTML=l.map(card).join("");
+ $("#near").classList.toggle("on",S.near);["easy","hard"].forEach(v=>$("#df-"+v).classList.toggle("on",S.diff===v))}
+function renderAll(){renderStats();renderQueue();renderGrid();$("#snd").textContent=S.sound?"🔊 Sonido: sí":"🔇 Sonido: no"}
+
+// ===== Acciones =====
+const saveQ=()=>ls.set("queue",S.queue);
+document.addEventListener("click",e=>{
+  const t=e.target.closest("[data-a]");if(!t)return;
+  const a=t.dataset.a,id=+t.dataset.id,g=S.games.find(x=>x.appid===id);
+  if(a==="x"||a==="sw")return;
+  beep([660]);
+  if(a==="tg"){const c=$("#g"+id);if(S.open.has(id)){S.open.delete(id);c.classList.remove("open")}else{S.open.add(id);$("#al"+id).innerHTML=achList(g);c.classList.add("open")}}
+  else if(a==="q"){const i=S.queue.indexOf(id);if(i>=0)S.queue.splice(i,1);else if(S.queue.length>=3)return toast("Máximo 3 platinos en cola");else S.queue.push(id);saveQ();renderQueue();renderGrid()}
+  else if(a==="cf"){if(g.plat){S.queue=S.queue.filter(x=>x!==id);saveQ();celebrate();toast("🏆 ¡Platino confirmado: "+g.juego+"!");renderQueue();renderGrid()}else toast(`Aún faltan ${g.logros_total-g.logros_desbloqueados} logros`)}
+  else if(a==="near"){S.near=!S.near;renderGrid()}
+  else if(a==="df"){S.diff=S.diff===t.dataset.v?"":t.dataset.v;renderGrid()}
+  else if(a==="snd"){S.sound=!S.sound;ls.set("sound",S.sound);renderAll()}
+  else if(a==="rnd"){const l=visible().filter(g=>!g.plat);if(!l.length)return toast("No hay juegos pendientes con estos filtros");
+    const r=l[Math.random()*l.length|0];toast("🎲 Te toca: "+r.juego);const c=$("#g"+r.appid);c.scrollIntoView({behavior:"smooth",block:"center"});c.classList.add("flash");setTimeout(()=>c.classList.remove("flash"),2600)}
+  else if(a==="exp"){
+    const rows=S.queue.map((id,i)=>{const g=S.games.find(x=>x.appid===id);return g?`| ${i+1} | <img src="${cover(id)}" width="140"> | **${g.juego}** | ${g.completado_pct}% (${g.logros_desbloqueados}/${g.logros_total}) |`:""}).filter(Boolean);
+    if(!rows.length)return toast("Primero añade juegos a la cola");
+    const md=`### 🏆 Próximos platinos\n\n| # | | Juego | Progreso |\n|:-:|---|---|---|\n${rows.join("\n")}\n`;
+    (navigator.clipboard?navigator.clipboard.writeText(md):Promise.reject()).then(()=>toast("Copiado: pégalo en tu README.md")).catch(()=>prompt("Copia este texto:",md))}
+});
+document.addEventListener("change",e=>{const t=e.target;
+  if(t.dataset.a==="sw"){const id=+t.dataset.id;S.pf[id]=t.checked;$("#al"+id).innerHTML=achList(S.games.find(x=>x.appid===id))}});
+$("#q").addEventListener("input",e=>{S.q=e.target.value;renderGrid()});
+$("#sort").addEventListener("change",e=>{S.sort=e.target.value;renderGrid()});
+
+// ===== Carga =====
+(async()=>{
+  let d;try{const r=await fetch(DATA_URL+"?t="+Date.now());if(!r.ok)throw 0;d=await r.json()}catch{d=DEMO;setTimeout(()=>toast("No se pudo leer el Gist: mostrando datos de ejemplo"),500)}
+  S.games=d.juegos.map(prep);
+  const done=S.queue.filter(id=>S.games.some(g=>g.appid===id&&g.plat));   // auto-desmarcado al 100%
+  S.queue=S.queue.filter(id=>S.games.some(g=>g.appid===id&&!g.plat));saveQ();
+  $("#upd").textContent="Actualizado: "+(d.actualizado||"—").replace("T"," ");
+  renderAll();
+  if(done.length){celebrate();toast("🏆 Platino detectado: sale de la cola")}
+})();
+</script>
+</body>
+</html>
