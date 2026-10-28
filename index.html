@@ -156,12 +156,14 @@ function prep(g){
 }
 
 // ===== Sonido y confeti =====
-function beep(seq){if(!S.sound)return;try{const a=new(window.AudioContext||window.webkitAudioContext)();seq.forEach((f,i)=>{const o=a.createOscillator(),g=a.createGain(),t=a.currentTime+i*.1;o.type="square";o.frequency.value=f;g.gain.setValueAtTime(.05,t);g.gain.exponentialRampToValueAtTime(.001,t+.18);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+.2)})}catch{}}
+const SFX={tick:["square",[880],.06,.04],open:["triangle",[440,660,880],.06,.07],close:["triangle",[660,440],.06,.07],add:["square",[523,784],.08,.05],remove:["square",[392,262],.08,.05],error:["sawtooth",[180,140],.12,.05],dice:["square",[600,800,500,900,700,1000],.05,.04],copy:["triangle",[988,1319],.08,.07],sweep:["sine",[300,500,700,900],.05,.08],win:["square",[523,659,784,1047,1319],.1,.05]};
+let AC;function sfx(n){if(!S.sound||!SFX[n])return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume();
+ const[ty,fr,st,vo]=SFX[n];fr.forEach((f,i)=>{const o=AC.createOscillator(),g=AC.createGain(),t=AC.currentTime+i*st;o.type=ty;o.frequency.value=f;g.gain.setValueAtTime(vo,t);g.gain.exponentialRampToValueAtTime(.001,t+st*1.8);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+st*2)})}catch{}}
 function confetti(){const c=$("#cf"),x=c.getContext("2d");c.width=innerWidth;c.height=innerHeight;
  const P=Array.from({length:150},()=>({x:innerWidth/2,y:innerHeight/3,vx:(Math.random()-.5)*15,vy:-2-Math.random()*12,s:4+Math.random()*5,r:Math.random()*6,k:["#fbbf24","#fde68a","#f59e0b","#fff"][Math.random()*4|0]}));
  let n=0;(function f(){x.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.r+=.2;x.fillStyle=p.k;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);x.restore()});
  if(++n<160)requestAnimationFrame(f);else x.clearRect(0,0,c.width,c.height)})()}
-function celebrate(){confetti();beep([523,659,784,1047])}
+function celebrate(){confetti();sfx("win")}
 let tt;function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("s");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("s"),2800)}
 
 // ===== Render =====
@@ -220,7 +222,7 @@ function openM(g){
    <div class="al" id="al${g.appid}">${achList(g)}</div>`;
   $("#md").hidden=false;document.body.style.overflow="hidden";$("#mc").scrollTop=0;$("#mc .x").focus();
 }
-function closeM(){$("#md").hidden=true;document.body.style.overflow="";S.cur=null}
+function closeM(){if($("#md").hidden)return;sfx("close");$("#md").hidden=true;document.body.style.overflow="";S.cur=null}
 function renderQueue(){
   const el=[0,1,2].map(i=>{const g=S.games.find(x=>x.appid===S.queue[i]);
    if(!g)return`<div class="slot gl empty">Espacio #${i+1} libre.<br>Marca ⭐ en un juego para añadirlo.</div>`;
@@ -264,31 +266,31 @@ document.addEventListener("click",e=>{
   const t=e.target.closest("[data-a]");if(!t)return;
   const a=t.dataset.a,id=+t.dataset.id,g=S.games.find(x=>x.appid===id);
   if(a==="x"||a==="sw")return;
-  beep([660]);
+  const sn={tg:"open",near:"tick",df:"tick",md:"tick",grp:"tick",bg:"sweep",rnd:"dice"}[a];if(sn)sfx(sn);
   if(a==="tg")openM(g);
   else if(a==="cl")closeM();
   else if(a==="bg"){S.bgm={neutro:"queue",queue:"random",random:"neutro"}[S.bgm];S.rnd=null;S.bg=0;ls.set("bgm",S.bgm);$("#bgb").textContent="🎨 "+BGL[S.bgm];setBg()}
-  else if(a==="q"){const i=S.queue.indexOf(id);if(i>=0)S.queue.splice(i,1);else if(S.queue.length>=3)return toast("Máximo 3 platinos en cola");else S.queue.push(id);saveQ();renderQueue();renderGrid()}
-  else if(a==="cf"){if(g.plat){S.queue=S.queue.filter(x=>x!==id);saveQ();celebrate();toast("🏆 ¡Platino confirmado: "+g.juego+"!");renderQueue();renderGrid()}else toast(`Aún faltan ${g.logros_total-g.logros_desbloqueados} logros`)}
+  else if(a==="q"){const i=S.queue.indexOf(id);if(i>=0){S.queue.splice(i,1);sfx("remove")}else if(S.queue.length>=3){sfx("error");return toast("Máximo 3 platinos en cola")}else{S.queue.push(id);sfx("add")}saveQ();renderQueue();renderGrid()}
+  else if(a==="cf"){if(g.plat){S.queue=S.queue.filter(x=>x!==id);saveQ();celebrate();toast("🏆 ¡Platino confirmado: "+g.juego+"!");renderQueue();renderGrid()}else{sfx("error");toast(`Aún faltan ${g.logros_total-g.logros_desbloqueados} logros`)}}
   else if(a==="near"){S.near=!S.near;renderGrid()}
   else if(a==="md"){S.mode=S.mode===t.dataset.v?"":t.dataset.v;renderGrid()}
   else if(a==="grp"){S.grp=!S.grp;renderGrid()}
   else if(a==="df"){S.diff=S.diff===t.dataset.v?"":t.dataset.v;renderGrid()}
-  else if(a==="snd"){S.sound=!S.sound;ls.set("sound",S.sound);renderAll()}
-  else if(a==="rnd"){const l=visible().filter(g=>!g.plat);if(!l.length)return toast("No hay juegos pendientes con estos filtros");
+  else if(a==="snd"){S.sound=!S.sound;ls.set("sound",S.sound);renderAll();sfx("tick")}
+  else if(a==="rnd"){const l=visible().filter(g=>!g.plat);if(!l.length){sfx("error");return toast("No hay juegos pendientes con estos filtros")}
     const r=l[Math.random()*l.length|0];toast("🎲 Te toca: "+r.juego);const c=$("#g"+r.appid);c.scrollIntoView({behavior:"smooth",block:"center"});c.classList.add("flash");setTimeout(()=>c.classList.remove("flash"),2600)}
   else if(a==="exp"){
     const rows=S.queue.map((id,i)=>{const g=S.games.find(x=>x.appid===id);return g?`| ${i+1} | <img src="${cover(id)}" width="140"> | **${g.juego}** | ${g.completado_pct}% (${g.logros_desbloqueados}/${g.logros_total}) |`:""}).filter(Boolean);
-    if(!rows.length)return toast("Primero añade juegos a la cola");
+    if(!rows.length){sfx("error");return toast("Primero añade juegos a la cola")}
     const md=`### 🏆 Próximos platinos\n\n| # | | Juego | Progreso |\n|:-:|---|---|---|\n${rows.join("\n")}\n`;
-    (navigator.clipboard?navigator.clipboard.writeText(md):Promise.reject()).then(()=>toast("Copiado: pégalo en tu README.md")).catch(()=>prompt("Copia este texto:",md))}
+    (navigator.clipboard?navigator.clipboard.writeText(md):Promise.reject()).then(()=>{sfx("copy");toast("Copiado: pégalo en tu README.md")}).catch(()=>prompt("Copia este texto:",md))}
 });
 document.addEventListener("change",e=>{const t=e.target;
-  if(t.dataset.a==="sw"){const id=+t.dataset.id;S.pf[id]=t.checked;$("#al"+id).innerHTML=achList(S.games.find(x=>x.appid===id))}});
+  if(t.dataset.a==="sw"){sfx("tick");const id=+t.dataset.id;S.pf[id]=t.checked;$("#al"+id).innerHTML=achList(S.games.find(x=>x.appid===id))}});
 $("#md").addEventListener("click",e=>{if(e.target.id==="md")closeM()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeM()});
 $("#q").addEventListener("input",e=>{S.q=e.target.value;renderGrid()});
-$("#sort").addEventListener("change",e=>{S.sort=e.target.value;renderGrid()});
+$("#sort").addEventListener("change",e=>{S.sort=e.target.value;renderGrid();sfx("tick")});
 
 // ===== Carga =====
 (async()=>{
