@@ -9,7 +9,7 @@
 <style>
 :root{--g:rgba(255,255,255,.055);--b:rgba(255,255,255,.11);--t:#e8edf5;--m:#8b95a7;--c:#22d3ee;--gr:#34d399;--au:#fbbf24;color-scheme:dark}
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;color:var(--t);font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(900px 500px at 8% -10%,#0b3a4a66,transparent),radial-gradient(800px 500px at 100% 0,#3a0b4a44,transparent),#000}
+body{margin:0;min-height:100vh;color:var(--t);font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(900px 500px at 8% -10%,#0b3a4a66,transparent),radial-gradient(800px 500px at 100% 0,#3a0b4a44,transparent),radial-gradient(700px 500px at 50% 110%,#0b4a3a44,transparent),#000;background-attachment:fixed}
 h1,h2,.num,.nm{font-family:"Chakra Petch","Segoe UI",sans-serif}
 main{max-width:1200px;margin:0 auto;padding:20px 16px 60px}
 .gl{background:var(--g);border:1px solid var(--b);border-radius:16px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
@@ -62,6 +62,14 @@ select{background:#111;border:1px solid var(--b);border-radius:10px;padding:8px}
 .note{padding:8px 14px 4px;font-size:13px;color:var(--m)}.note b{color:var(--t)}
 .bd.rd{color:#f87171;border-color:#f8717166}.bd.ok{color:var(--gr);border-color:#34d39966}
 #bg{position:fixed;inset:-20px;z-index:-1;background-position:center top;background-size:cover;filter:blur(7px) saturate(1.2);opacity:0;transition:opacity 1.4s}#bg.on{opacity:.32}
+.mdl{position:fixed;inset:0;z-index:20;background:#000a;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:16px;animation:fi .2s}
+.mdl[hidden]{display:none}
+#mc{width:min(720px,100%);max-height:88vh;overflow:auto;padding:16px;background:rgba(14,18,26,.94);animation:pop .25s}
+@keyframes fi{from{opacity:0}}@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.97)}}
+#mc>.x{position:sticky;top:0;float:right;z-index:2;background:#000c;margin:0 0 6px 8px}
+.mh{display:flex;gap:14px;align-items:flex-start}.mh img{width:210px;max-width:38%;border-radius:10px}.mh>div{flex:1;min-width:0}
+#mc .al{padding:0}#mc .sw{padding:10px 0 4px}#mc .note{padding:10px 0 0}
+@media(max-width:520px){.mh{flex-direction:column}.mh img{max-width:100%;width:100%}}
 #toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);padding:10px 18px;opacity:0;pointer-events:none;transition:.3s;z-index:5;background:#000c}
 #toast.s{opacity:1}
 #cf{position:fixed;inset:0;pointer-events:none;z-index:9}
@@ -74,7 +82,7 @@ select{background:#111;border:1px solid var(--b);border-radius:10px;padding:8px}
 <main>
 <header>
   <div><h1>Logros de <span>Cioccolatuu</span></h1><div class="sub" id="upd">Cargando…</div></div>
-  <button data-a="snd" id="snd"></button>
+  <div><button data-a="bg" id="bgb"></button> <button data-a="snd" id="snd"></button></div>
 </header>
 
 <section class="stats" id="stats"></section>
@@ -106,6 +114,7 @@ select{background:#111;border:1px solid var(--b);border-radius:10px;padding:8px}
 <p class="sub" id="count"></p>
 <section class="grid" id="grid"></section>
 </main>
+<div id="md" class="mdl" hidden role="dialog" aria-modal="true" aria-label="Detalle del juego"><div id="mc" class="gl"></div></div>
 <div id="toast" class="gl"></div>
 
 <script>
@@ -121,7 +130,7 @@ const fd=d=>d.toLocaleDateString("es-CL");
 const cover=id=>`https://cdn.cloudflare.steamstatic.com/steam/apps/${id}/header.jpg`;
 
 // ===== Estado =====
-const S={games:[],q:"",sort:"plat",near:false,diff:"",mode:"",grp:false,queue:ls.get("queue",[]),sound:ls.get("sound",true),open:new Set(),pf:{}};
+const S={games:[],q:"",sort:"plat",near:false,diff:"",mode:"",grp:false,bgm:ls.get("bgm","neutro"),queue:ls.get("queue",[]),sound:ls.get("sound",true),open:new Set(),pf:{}};
 
 // ===== Datos de ejemplo (si el Gist no responde) =====
 const mk=(a,n,h,u,p,x={})=>({appid:a,juego:n,horas_jugadas:h,logros_total:u+p,logros_desbloqueados:u,completado_pct:Math.round(u/(u+p)*1000)/10,
@@ -187,13 +196,31 @@ function renderRadar(){
    G.map(([n,v],i)=>{const[x,y]=P(i,R+20);return`<text x="${x}" y="${y}" fill="#8b95a7" font-size="10" text-anchor="middle">${esc(n)} ${Math.round(v)}%</text>`}).join("")+`</svg>`;
 }
 function setBg(){
-  const g=S.games.find(x=>x.appid===S.queue[0])||[...S.games].sort((a,b)=>b.horas_jugadas-a.horas_jugadas)[0];
-  if(!g||S.bg===g.appid)return;S.bg=g.appid;
+  const b=$("#bg");let g=null;
+  if(S.bgm==="queue")g=S.games.find(x=>x.appid===S.queue[0])||null;
+  if(S.bgm==="random")g=S.rnd||(S.rnd=S.games[Math.random()*S.games.length|0]);
+  if(!g){S.bg=0;b.classList.remove("on");return}
+  if(S.bg===g.appid)return;S.bg=g.appid;
   const u=`https://cdn.cloudflare.steamstatic.com/steam/apps/${g.appid}/`,im=new Image();
-  im.onload=()=>{const b=$("#bg");b.style.backgroundImage=`linear-gradient(180deg,#0000 0,#000 92%),url(${im.src})`;b.classList.add("on")};
+  im.onload=()=>{b.style.backgroundImage=`linear-gradient(180deg,#0000 0,#000 92%),url(${im.src})`;b.classList.add("on")};
   im.onerror=()=>{if(!im.src.includes("header"))im.src=u+"header.jpg"};
   im.src=u+"library_hero.jpg";
 }
+const BGL={neutro:"Fondo: neutro",queue:"Fondo: mi platino",random:"Fondo: aleatorio"};
+function openM(g){
+  S.cur=g.appid;const m=g.meta,st=g.store;
+  const nota=(m.nota||m.comentario||m.logro_molesto)?`<div class="note">${m.nota?`<b>Mi nota: ${m.nota}/10</b> `:""}${esc(m.comentario||"")}${m.logro_molesto?`<br>😤 Más molesto: ${esc(m.logro_molesto)}`:""}</div>`:"";
+  const rec=g.plat&&g.last?`<span class="bd au">🏆 Platino ${fd(g.last)}</span>`:"";
+  $("#mc").innerHTML=`<button class="x" data-a="cl" aria-label="Cerrar">✕</button>
+   <div class="mh ${g.plat?"done":""}"><img src="${cover(g.appid)}" alt="" onerror="this.style.display='none'"><div><div class="nm">${esc(g.juego)}</div>
+   <div class="bar"><i style="width:${g.completado_pct}%"></i></div>
+   <div class="meta"><span>${g.completado_pct}% (${g.logros_desbloqueados}/${g.logros_total})</span><span>${g.horas_jugadas} h${m.horas_hltb?" / ~"+m.horas_hltb+" h":""}</span><span>${g.lph} logros/h</span><span>Dif. ${g.dif}/10</span></div>
+   ${rec}${(st.generos||[]).map(x=>`<span class="bd">${esc(x)}</span>`).join("")}</div></div>${nota}
+   <label class="sw"><input type="checkbox" data-a="sw" data-id="${g.appid}" ${S.pf[g.appid]!==false?"checked":""}> Pendientes primero</label>
+   <div class="al" id="al${g.appid}">${achList(g)}</div>`;
+  $("#md").hidden=false;document.body.style.overflow="hidden";$("#mc").scrollTop=0;$("#mc .x").focus();
+}
+function closeM(){$("#md").hidden=true;document.body.style.overflow="";S.cur=null}
 function renderQueue(){
   const el=[0,1,2].map(i=>{const g=S.games.find(x=>x.appid===S.queue[i]);
    if(!g)return`<div class="slot gl empty">Espacio #${i+1} libre.<br>Marca ⭐ en un juego para añadirlo.</div>`;
@@ -223,15 +250,13 @@ function card(g){
    <div class="bar"><i style="width:${g.completado_pct}%"></i></div>
    <div class="meta"><span>${g.completado_pct}% (${g.logros_desbloqueados}/${g.logros_total})</span><span>${g.horas_jugadas} h${m.horas_hltb?" / ~"+m.horas_hltb+" h":""}</span><span>${g.lph} logros/h</span><span>Dif. ${g.dif}/10</span></div>${rec}${bads}</div></div>
   <div class="act"><button data-a="q" data-id="${g.appid}" class="${q>=0?"on":""}">${q>=0?"⭐ En cola #"+(q+1):"☆ Siguiente platino"}</button>
-   <a href="${guide}" target="_blank" rel="noopener" data-a="x">📖 Guía</a></div>
-  <div class="acc"><div><label class="sw"><input type="checkbox" data-a="sw" data-id="${g.appid}" ${S.pf[g.appid]!==false?"checked":""}> Pendientes primero</label>
-  ${note}<div class="al" id="al${g.appid}">${o?achList(g):""}</div></div></div></article>`;
+   <a href="${guide}" target="_blank" rel="noopener" data-a="x">📖 Guía</a></div></article>`;
 }
 function groups(l){const M={};l.forEach(g=>{const k=g.meta.saga||"Sin saga";(M[k]=M[k]||[]).push(g)});
  return Object.keys(M).sort((a,b)=>a==="Sin saga"?1:b==="Sin saga"?-1:a.localeCompare(b,"es")).map(k=>`<div class="gh">${esc(k)} <span class="sub">(${M[k].length})</span></div>`+M[k].map(card).join("")).join("")}
 function renderGrid(){const l=visible();$("#count").textContent=`Mostrando ${l.length} de ${S.games.length} juegos`;$("#grid").innerHTML=S.grp?groups(l):l.map(card).join("");
  $("#near").classList.toggle("on",S.near);$("#grp").classList.toggle("on",S.grp);["solo","multi"].forEach(v=>$("#md-"+v).classList.toggle("on",S.mode===v));["easy","hard"].forEach(v=>$("#df-"+v).classList.toggle("on",S.diff===v))}
-function renderAll(){renderStats();renderRadar();renderQueue();renderGrid();$("#snd").textContent=S.sound?"🔊 Sonido: sí":"🔇 Sonido: no"}
+function renderAll(){renderStats();renderRadar();renderQueue();renderGrid();$("#snd").textContent=S.sound?"🔊 Sonido: sí":"🔇 Sonido: no";$("#bgb").textContent="🎨 "+BGL[S.bgm]}
 
 // ===== Acciones =====
 const saveQ=()=>ls.set("queue",S.queue);
@@ -240,7 +265,9 @@ document.addEventListener("click",e=>{
   const a=t.dataset.a,id=+t.dataset.id,g=S.games.find(x=>x.appid===id);
   if(a==="x"||a==="sw")return;
   beep([660]);
-  if(a==="tg"){const c=$("#g"+id);if(S.open.has(id)){S.open.delete(id);c.classList.remove("open")}else{S.open.add(id);$("#al"+id).innerHTML=achList(g);c.classList.add("open")}}
+  if(a==="tg")openM(g);
+  else if(a==="cl")closeM();
+  else if(a==="bg"){S.bgm={neutro:"queue",queue:"random",random:"neutro"}[S.bgm];S.rnd=null;S.bg=0;ls.set("bgm",S.bgm);$("#bgb").textContent="🎨 "+BGL[S.bgm];setBg()}
   else if(a==="q"){const i=S.queue.indexOf(id);if(i>=0)S.queue.splice(i,1);else if(S.queue.length>=3)return toast("Máximo 3 platinos en cola");else S.queue.push(id);saveQ();renderQueue();renderGrid()}
   else if(a==="cf"){if(g.plat){S.queue=S.queue.filter(x=>x!==id);saveQ();celebrate();toast("🏆 ¡Platino confirmado: "+g.juego+"!");renderQueue();renderGrid()}else toast(`Aún faltan ${g.logros_total-g.logros_desbloqueados} logros`)}
   else if(a==="near"){S.near=!S.near;renderGrid()}
@@ -258,6 +285,8 @@ document.addEventListener("click",e=>{
 });
 document.addEventListener("change",e=>{const t=e.target;
   if(t.dataset.a==="sw"){const id=+t.dataset.id;S.pf[id]=t.checked;$("#al"+id).innerHTML=achList(S.games.find(x=>x.appid===id))}});
+$("#md").addEventListener("click",e=>{if(e.target.id==="md")closeM()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeM()});
 $("#q").addEventListener("input",e=>{S.q=e.target.value;renderGrid()});
 $("#sort").addEventListener("change",e=>{S.sort=e.target.value;renderGrid()});
 
