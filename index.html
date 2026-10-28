@@ -61,6 +61,7 @@ select{background:#111;border:1px solid var(--b);border-radius:10px;padding:8px}
 .ico{width:34px;height:34px;border-radius:6px;flex:none}.ach.no .ico{opacity:.8}
 .note{padding:8px 14px 4px;font-size:13px;color:var(--m)}.note b{color:var(--t)}
 .bd.rd{color:#f87171;border-color:#f8717166}.bd.ok{color:var(--gr);border-color:#34d39966}
+#bg{position:fixed;inset:-20px;z-index:-1;background-position:center top;background-size:cover;filter:blur(7px) saturate(1.2);opacity:0;transition:opacity 1.4s}#bg.on{opacity:.32}
 #toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);padding:10px 18px;opacity:0;pointer-events:none;transition:.3s;z-index:5;background:#000c}
 #toast.s{opacity:1}
 #cf{position:fixed;inset:0;pointer-events:none;z-index:9}
@@ -68,6 +69,7 @@ select{background:#111;border:1px solid var(--b);border-radius:10px;padding:8px}
 </style>
 </head>
 <body>
+<div id="bg"></div>
 <canvas id="cf"></canvas>
 <main>
 <header>
@@ -184,13 +186,21 @@ function renderRadar(){
    `<polygon points="${G.map(([,v],i)=>P(i,R*v/100).join(",")).join(" ")}" fill="#22d3ee33" stroke="#22d3ee" stroke-width="2"/>`+
    G.map(([n,v],i)=>{const[x,y]=P(i,R+20);return`<text x="${x}" y="${y}" fill="#8b95a7" font-size="10" text-anchor="middle">${esc(n)} ${Math.round(v)}%</text>`}).join("")+`</svg>`;
 }
+function setBg(){
+  const g=S.games.find(x=>x.appid===S.queue[0])||[...S.games].sort((a,b)=>b.horas_jugadas-a.horas_jugadas)[0];
+  if(!g||S.bg===g.appid)return;S.bg=g.appid;
+  const u=`https://cdn.cloudflare.steamstatic.com/steam/apps/${g.appid}/`,im=new Image();
+  im.onload=()=>{const b=$("#bg");b.style.backgroundImage=`linear-gradient(180deg,#0000 0,#000 92%),url(${im.src})`;b.classList.add("on")};
+  im.onerror=()=>{if(!im.src.includes("header"))im.src=u+"header.jpg"};
+  im.src=u+"library_hero.jpg";
+}
 function renderQueue(){
   const el=[0,1,2].map(i=>{const g=S.games.find(x=>x.appid===S.queue[i]);
    if(!g)return`<div class="slot gl empty">Espacio #${i+1} libre.<br>Marca ⭐ en un juego para añadirlo.</div>`;
    return`<div class="slot gl"><span class="rk">#${i+1}</span><img src="${cover(g.appid)}" alt="" onerror="this.style.display='none'">
    <div><div class="nm">${esc(g.juego)}</div><div class="sub">${g.completado_pct}% · faltan ${g.logros_total-g.logros_desbloqueados}</div>
    <button data-a="cf" data-id="${g.appid}">Confirmar platino</button></div></div>`});
-  $("#queue").innerHTML=el.join("");
+  $("#queue").innerHTML=el.join("");setBg();
 }
 const ico=(g,a)=>{const f=a.ok?a.icono:a.icono_gris;return f?`<img class="ico" loading="lazy" src="https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/${g.appid}/${f}" alt="" onerror="this.remove()">`:`<b>${a.ok?"✓":"○"}</b>`};
 function achList(g){
