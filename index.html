@@ -74,14 +74,32 @@ select{background:#111;border:1px solid var(--b);border-radius:10px;padding:8px}
 #home[hidden]{display:none}#home.leave{opacity:0;transform:scale(1.05);filter:blur(10px);pointer-events:none}
 #home h1{font-size:clamp(28px,5vw,46px);margin:0}#home p{margin:0}
 #opts{display:flex;flex-wrap:wrap;gap:22px;justify-content:center}
-.acct{--ac:var(--c);width:260px;padding:28px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;border-radius:22px;animation:rise .7s both;transition:transform .3s,box-shadow .3s,border-color .3s}
-.acct:nth-child(2){--ac:#a78bfa;animation-delay:.12s}
+.acct{--ac:#39ff88;width:260px;padding:28px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;border-radius:22px;animation:rise .7s both;transition:transform .3s,box-shadow .3s,border-color .3s}
+.acct:nth-child(2){--ac:#ff4fd8;animation-delay:.12s}
 .acct:hover{transform:translateY(-8px) scale(1.02);border-color:var(--ac);box-shadow:0 18px 50px #000a,0 0 34px color-mix(in srgb,var(--ac) 40%,transparent)}
 .acct img,.ini{width:104px;height:104px;border-radius:50%;object-fit:cover;border:3px solid var(--ac);box-shadow:0 0 24px color-mix(in srgb,var(--ac) 50%,transparent)}
 .ini{display:grid;place-items:center;font:700 44px "Chakra Petch",sans-serif;background:#ffffff0d;color:var(--ac)}
 .acct .nm{font-size:22px;margin:0}.acct small{color:var(--m)}
 #app.in{animation:rise .6s cubic-bezier(.2,.8,.2,1)}
 @keyframes rise{from{opacity:0;transform:translateY(26px);filter:blur(6px)}}
+.u-cioccolatuu{color:#39ff88;text-shadow:0 0 12px #39ff8899;font-weight:700}
+.u-habukyy{color:#ff4fd8;text-shadow:0 0 12px #ff4fd899;font-weight:700}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 10px}
+#stats.flip{animation:flip .55s}@keyframes flip{from{transform:perspective(800px) rotateX(-90deg);opacity:0}}
+.cp{grid-column:1/-1;display:flex;gap:22px;align-items:center;padding:18px;flex-wrap:wrap}
+.ring{width:140px;height:140px;flex:none}.ring circle{fill:none;stroke-width:10;stroke-linecap:round}
+.hr{margin:12px 0}.hr>b{display:block;font-size:13px;color:var(--m);margin-bottom:4px}
+.pb{height:22px;background:#ffffff0f;border-radius:8px;margin:3px 0;position:relative;overflow:hidden}.pb i{display:block;height:100%;border-radius:8px}
+.pb em{position:absolute;left:8px;top:1px;font-style:normal;font-size:13px;color:#fff;text-shadow:0 0 4px #000}
+.cc{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}@media(max-width:520px){.cc{grid-template-columns:1fr}}
+#rl{position:fixed;right:14px;top:96px;width:236px;padding:12px;z-index:6;text-align:center;display:none}
+@media(min-width:1180px){#rl:not([hidden]){display:block}body.rl #app{padding-right:264px}}
+.wh{position:relative;width:200px;height:200px;margin:8px auto}#wh{width:100%;transition:transform 4.2s cubic-bezier(.12,.6,.1,1)}
+.pn{position:absolute;left:50%;top:-6px;transform:translateX(-50%);border:9px solid transparent;border-top:16px solid var(--au);border-bottom:0}
+#sp{position:fixed;left:12px;bottom:12px;z-index:8;width:min(300px,calc(100% - 24px));padding:6px}#sp.min .spf{display:none}
+.mas{columns:3 200px;gap:12px}.mas img,.mas .ph{width:100%;margin:0 0 12px;border-radius:14px;break-inside:avoid;animation:rise .7s both;animation-delay:var(--d);transition:transform .3s}
+.mas img{transform:rotate(var(--r,0deg))}.mas img:hover{transform:scale(1.04) rotate(0)}
+.mas .ph{height:var(--h);display:grid;place-items:center;font-size:34px;background:linear-gradient(135deg,#ff4fd822,#39ff8822);border:1px solid var(--b)}
 #toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);padding:10px 18px;opacity:0;pointer-events:none;transition:.3s;z-index:5;background:#000c}
 #toast.s{opacity:1}
 #cf{position:fixed;inset:0;pointer-events:none;z-index:9}
@@ -98,9 +116,10 @@ select{background:#111;border:1px solid var(--b);border-radius:10px;padding:8px}
 <main id="app" hidden>
 <header>
   <div><h1>Logros de <span id="who"></span></h1><div class="sub" id="upd">Cargando…</div></div>
-  <div><button data-a="home">↩ Cambiar cuenta</button> <button data-a="bg" id="bgb"></button> <button data-a="snd" id="snd"></button></div>
+  <div><button data-a="home">↩ Cambiar cuenta</button> <button data-a="amor" id="amorb">💗 Amor</button> <button data-a="bg" id="bgb"></button> <button data-a="snd" id="snd"></button></div>
 </header>
 
+<p class="row"><button data-a="cm" id="cm">💞 Compatibilidad</button><button data-a="h2h">⚔️ Cara a cara</button></p>
 <section class="stats" id="stats"></section>
 
 <h2>Maestría por género</h2>
@@ -110,6 +129,7 @@ select{background:#111;border:1px solid var(--b);border-radius:10px;padding:8px}
 <section class="q" id="queue"></section>
 <p><button data-a="exp">Copiar widget para README</button></p>
 
+<div id="lib">
 <h2>Biblioteca</h2>
 <section class="ctl gl">
   <input type="search" id="q" placeholder="Buscar juego…" aria-label="Buscar juego">
@@ -125,11 +145,16 @@ select{background:#111;border:1px solid var(--b);border-radius:10px;padding:8px}
   <button data-a="md" data-v="solo" id="md-solo">Solo jugador</button>
   <button data-a="md" data-v="multi" id="md-multi">Multijugador</button>
   <button data-a="grp" id="grp">Agrupar por saga</button>
+  <button data-a="com" id="com">👫 Multijugador en común</button>
   <button data-a="rnd">🎲 Aleatorio</button>
 </section>
 <p class="sub" id="count"></p>
 <section class="grid" id="grid"></section>
+</div>
+<section id="amor" hidden></section>
 </main>
+<aside id="rl" class="gl" hidden><b class="nm">🎰 ¿Qué jugamos hoy?</b><div id="rlc"></div></aside>
+<div id="sp" class="gl min" hidden><button data-a="sp">🎵 Playlist</button><div class="spf"></div></div>
 <div id="md" class="mdl" hidden role="dialog" aria-modal="true" aria-label="Detalle del juego"><div id="mc" class="gl"></div></div>
 <div id="toast" class="gl"></div>
 
@@ -137,6 +162,11 @@ select{background:#111;border:1px solid var(--b);border-radius:10px;padding:8px}
 // ===== CONFIG: tu Gist (siempre la última versión) =====
 const GIST="https://gist.githubusercontent.com/Cioccolatuu/5a48a8fdfd3590ee577e81916d0f0c7a/raw/";
 const CUENTAS=[{id:"cioccolatuu",nombre:"cioccolatuu"},{id:"habukyy",nombre:"habukyy"}];
+const SPOTIFY="";   // pega aquí el enlace de inserción: https://open.spotify.com/embed/playlist/TU_ID
+const FOTOS=[];     // tus fotos para "Amor": ["fotos/1.jpg","fotos/2.jpg"] (súbelas a una carpeta "fotos" del repositorio)
+const COL={cioccolatuu:"#39ff88",habukyy:"#ff4fd8"};
+const U=id=>`<span class="u-${id}">${id}</span>`;
+const OT=()=>S.cuenta==="cioccolatuu"?"habukyy":"cioccolatuu";
 
 // ===== Utilidades =====
 const $=s=>document.querySelector(s);
@@ -191,12 +221,13 @@ function visible(){
   if(S.diff==="hard")l=l.filter(g=>g.dif>=6);
   if(S.mode==="solo")l=l.filter(g=>g.store.solo&&!g.store.multi);
   if(S.mode==="multi")l=l.filter(g=>g.store.multi);
+  if(S.com){const c=new Set(commonIds());l=l.filter(g=>c.has(g.appid))}
   const rest=f=>l.filter(f).sort(cmp);
   if(S.sort==="plat")return rest(g=>g.plat).concat(rest(g=>!g.plat));
   if(S.sort==="nplat")return rest(g=>!g.plat).concat(rest(g=>g.plat));
   return l.sort((a,b)=>S.sort==="az"?cmp(a,b):cmp(b,a));
 }
-function renderStats(){
+function renderStats(){if(S.compat&&S.other)return renderCompat();
   const G=S.games,tot=G.reduce((s,g)=>s+g.logros_total,0),unl=G.reduce((s,g)=>s+g.logros_desbloqueados,0);
   const d=G.length?(G.reduce((s,g)=>s+g.dif,0)/G.length).toFixed(1):"—";
   const it=[[G.length,"Juegos con logros"],[G.filter(g=>g.plat).length,"Platinados (100%)"],[unl.toLocaleString("es-CL"),"Logros desbloqueados"],[(tot?unl/tot*100:0).toFixed(1)+"%","Completitud global"],[d+"/10","Dificultad media (según rareza)"]];
@@ -227,7 +258,7 @@ function setBg(){
 }
 const BGL={neutro:"Fondo: neutro",queue:"Fondo: mi platino",random:"Fondo: aleatorio"};
 function openM(g){
-  S.cur=g.appid;const m=g.meta,st=g.store;
+  S.cur=g.appid;const m=g.meta,st=g.store,oo=S.other&&S.other.some(x=>x.appid===g.appid);
   const nota=(m.nota||m.comentario||m.logro_molesto)?`<div class="note">${m.nota?`<b>Mi nota: ${m.nota}/10</b> `:""}${esc(m.comentario||"")}${m.logro_molesto?`<br>😤 Más molesto: ${esc(m.logro_molesto)}`:""}</div>`:"";
   const rec=g.plat&&g.last?`<span class="bd au">🏆 Platino ${fd(g.last)}</span>`:"";
   $("#mc").innerHTML=`<button class="x" data-a="cl" aria-label="Cerrar">✕</button>
@@ -235,6 +266,7 @@ function openM(g){
    <div class="bar"><i style="width:${g.completado_pct}%"></i></div>
    <div class="meta"><span>${g.completado_pct}% (${g.logros_desbloqueados}/${g.logros_total})</span><span>${g.horas_jugadas} h${m.horas_hltb?" / ~"+m.horas_hltb+" h":""}</span><span>${g.lph} logros/h</span><span>Dif. ${g.dif}/10</span></div>
    ${rec}${(st.generos||[]).map(x=>`<span class="bd">${esc(x)}</span>`).join("")}</div></div>${nota}
+   ${oo?`<button data-a="cmp" data-id="${g.appid}">⚖️ Comparar logros con ${U(OT())}</button><div id="cmpbox"></div>`:""}
    <label class="sw"><input type="checkbox" data-a="sw" data-id="${g.appid}" ${S.pf[g.appid]!==false?"checked":""}> Pendientes primero</label>
    <div class="al" id="al${g.appid}">${achList(g)}</div>`;
   $("#md").hidden=false;document.body.style.overflow="hidden";$("#mc").scrollTop=0;$("#mc .x").focus();
@@ -274,8 +306,8 @@ function card(g){
 function groups(l){const M={};l.forEach(g=>{const k=g.meta.saga||"Sin saga";(M[k]=M[k]||[]).push(g)});
  return Object.keys(M).sort((a,b)=>a==="Sin saga"?1:b==="Sin saga"?-1:a.localeCompare(b,"es")).map(k=>`<div class="gh">${esc(k)} <span class="sub">(${M[k].length})</span></div>`+M[k].map(card).join("")).join("")}
 function renderGrid(){const l=visible();$("#count").textContent=`Mostrando ${l.length} de ${S.games.length} juegos`;$("#grid").innerHTML=S.grp?groups(l):l.map(card).join("");
- $("#near").classList.toggle("on",S.near);$("#grp").classList.toggle("on",S.grp);["solo","multi"].forEach(v=>$("#md-"+v).classList.toggle("on",S.mode===v));["easy","hard"].forEach(v=>$("#df-"+v).classList.toggle("on",S.diff===v))}
-function renderAll(){renderStats();renderRadar();renderQueue();renderGrid();$("#snd").textContent=S.sound?"🔊 Sonido: sí":"🔇 Sonido: no";$("#bgb").textContent="🎨 "+BGL[S.bgm]}
+ $("#near").classList.toggle("on",S.near);$("#grp").classList.toggle("on",S.grp);$("#com").classList.toggle("on",S.com);["solo","multi"].forEach(v=>$("#md-"+v).classList.toggle("on",S.mode===v));["easy","hard"].forEach(v=>$("#df-"+v).classList.toggle("on",S.diff===v))}
+function renderAll(){renderRoulette();renderStats();renderRadar();renderQueue();renderGrid();$("#snd").textContent=S.sound?"🔊 Sonido: sí":"🔇 Sonido: no";$("#bgb").textContent="🎨 "+BGL[S.bgm]}
 
 // ===== Acciones =====
 const saveQ=()=>ls.set("queue_"+S.cuenta,S.queue);
@@ -285,7 +317,7 @@ document.addEventListener("click",e=>{
   if(a==="pick")return pick(t.dataset.id);
   if(a==="home")return home();
   if(a==="x"||a==="sw")return;
-  const sn={tg:"open",near:"tick",df:"tick",md:"tick",grp:"tick",bg:"sweep",rnd:"dice"}[a];if(sn)sfx(sn);
+  const sn={tg:"open",near:"tick",df:"tick",md:"tick",grp:"tick",bg:"sweep",rnd:"dice",com:"tick",cm:"sweep",h2h:"open",cmp:"tick",amor:"add",sp:"tick"}[a];if(sn)sfx(sn);
   if(a==="tg")openM(g);
   else if(a==="cl")closeM();
   else if(a==="bg"){S.bgm={neutro:"queue",queue:"random",random:"neutro"}[S.bgm];S.rnd=null;S.bg=0;ls.set("bgm",S.bgm);$("#bgb").textContent="🎨 "+BGL[S.bgm];setBg()}
@@ -294,6 +326,13 @@ document.addEventListener("click",e=>{
   else if(a==="near"){S.near=!S.near;renderGrid()}
   else if(a==="md"){S.mode=S.mode===t.dataset.v?"":t.dataset.v;renderGrid()}
   else if(a==="grp"){S.grp=!S.grp;renderGrid()}
+  else if(a==="com"){if(!S.other)return toast("Aún no cargan los datos de la otra cuenta");S.com=!S.com;renderGrid()}
+  else if(a==="cm"){if(!S.other)return toast("Aún no cargan los datos de la otra cuenta");S.compat=!S.compat;renderStats();const e=$("#stats");e.classList.remove("flip");void e.offsetWidth;e.classList.add("flip");$("#cm").classList.toggle("on",S.compat)}
+  else if(a==="h2h")h2h();
+  else if(a==="cmp")cmpAch(g);
+  else if(a==="spin")spin();
+  else if(a==="amor"){S.view=S.view==="amor"?"lib":"amor";viewSync()}
+  else if(a==="sp")spToggle();
   else if(a==="df"){S.diff=S.diff===t.dataset.v?"":t.dataset.v;renderGrid()}
   else if(a==="snd"){S.sound=!S.sound;ls.set("sound",S.sound);renderAll();sfx("tick")}
   else if(a==="rnd"){const l=visible().filter(g=>!g.plat);if(!l.length){sfx("error");return toast("No hay juegos pendientes con estos filtros")}
@@ -311,12 +350,56 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")closeM()});
 $("#q").addEventListener("input",e=>{S.q=e.target.value;renderGrid()});
 $("#sort").addEventListener("change",e=>{S.sort=e.target.value;renderGrid();sfx("tick")});
 
+// ===== Modo dúo: cruce de las dos cuentas =====
+function showM(h){$("#mc").innerHTML=`<button class="x" data-a="cl" aria-label="Cerrar">✕</button>`+h;$("#md").hidden=false;document.body.style.overflow="hidden";$("#mc").scrollTop=0;$("#mc .x").focus()}
+function cargarOtro(c){fetch(GIST+`logros_${OT()}.json?t=`+Date.now()).then(r=>r.ok?r.json():Promise.reject()).then(d=>{if(S.cuenta!==c.id)return;S.other=d.juegos.map(prep);renderAll()}).catch(()=>{})}
+function commonIds(){if(!S.other)return[];const ids=new Set(S.other.map(g=>g.appid));return S.games.filter(g=>ids.has(g.appid)&&g.store.multi).map(g=>g.appid)}
+function renderCompat(){
+  const gv=G=>{const v={};G.forEach(g=>(g.store.generos||[]).forEach(n=>v[n]=(v[n]||0)+Math.sqrt(g.horas_jugadas+1)));return v};
+  const a=gv(S.games),b=gv(S.other);let d=0,na=0,nb=0;
+  new Set([...Object.keys(a),...Object.keys(b)]).forEach(k=>{const x=a[k]||0,y=b[k]||0;d+=x*y;na+=x*x;nb+=y*y});
+  const cos=na&&nb?d/Math.sqrt(na*nb):0,ids=new Set(S.other.map(g=>g.appid)),sh=S.games.filter(g=>ids.has(g.appid)),
+   ov=Math.min(1,sh.length/Math.max(1,Math.min(S.games.length,S.other.length))*2),pct=Math.round((cos*.7+ov*.3)*100),
+   top=Object.keys(a).filter(k=>b[k]).sort((x,y)=>Math.min(b[y],a[y])-Math.min(b[x],a[x])).slice(0,3),C=2*Math.PI*54;
+  $("#stats").innerHTML=`<div class="cp gl"><svg class="ring" viewBox="0 0 140 140"><defs><linearGradient id="cg"><stop offset="0" stop-color="#39ff88"/><stop offset="1" stop-color="#ff4fd8"/></linearGradient></defs><circle cx="70" cy="70" r="54" stroke="#ffffff14"/><circle cx="70" cy="70" r="54" stroke="url(#cg)" stroke-dasharray="${C*pct/100} ${C}" transform="rotate(-90 70 70)"/><text x="70" y="79" text-anchor="middle" font-size="30" fill="#fff" font-family="Chakra Petch,sans-serif">${pct}%</text></svg>
+  <div><div class="nm">💞 ${pct}% de compatibilidad</div><p class="sub">${U("cioccolatuu")} + ${U("habukyy")}</p><p class="sub">${sh.length} juegos en común · ${commonIds().length} multijugador<br>Géneros en común: ${top.map(esc).join(", ")||"—"}</p><p class="sub">Se calcula con los géneros de lo que más juegan (70%) y los juegos que comparten (30%).</p></div></div>`}
+function h2h(){
+  if(!S.other)return toast("Aún no cargan los datos de la otra cuenta");
+  const me=S.cuenta,ot=OT(),st=G=>({h:G.reduce((s,g)=>s+g.horas_jugadas,0),p:G.filter(g=>g.plat).length,l:G.reduce((s,g)=>s+g.logros_desbloqueados,0),n:G.length,c:G.length?G.reduce((s,g)=>s+g.completado_pct,0)/G.length:0}),a=st(S.games),b=st(S.other);
+  const row=(t,x,y,f=v=>Math.round(v).toLocaleString("es-CL"))=>{const m=Math.max(x,y)||1;return`<div class="hr"><b>${t}${x===y?"":" · gana "+U(x>y?me:ot)}</b><div class="pb"><i style="width:${x/m*100}%;background:${COL[me]}"></i><em>${f(x)}</em></div><div class="pb"><i style="width:${y/m*100}%;background:${COL[ot]}"></i><em>${f(y)}</em></div></div>`};
+  const mb=new Map(S.other.map(g=>[g.appid,g])),fast=S.games.filter(g=>{const o=mb.get(g.appid);return g.plat&&o&&o.plat&&g.span!=null&&o.span!=null}).slice(0,6).map(g=>{const o=mb.get(g.appid);return`<li>${esc(g.juego)}: ${U(g.span<=o.span?me:ot)} (${g.span} vs ${o.span} días)</li>`});
+  showM(`<h2 style="margin-top:0">⚔️ Cara a cara</h2><p class="sub">${U(me)} (barra de arriba) vs ${U(ot)} (barra de abajo)</p>${row("Horas jugadas",a.h,b.h)}${row("Platinos",a.p,b.p)}${row("Logros desbloqueados",a.l,b.l)}${row("Completitud media",a.c,b.c,v=>v.toFixed(1)+"%")}${row("Juegos con logros",a.n,b.n)}<div class="hr"><b>Platinos que ambos tienen: ¿quién fue más rápido?</b>${fast.length?`<ul class="sub">${fast.join("")}</ul>`:`<p class="sub">Aún no tienen platinos en común.</p>`}</div>`)}
+function cmpAch(g){
+  const o=S.other.find(x=>x.appid===g.appid);if(!o)return;const me=S.cuenta,ot=OT(),m=new Set(g.desbloqueados.map(a=>a.id)),t=new Set(o.desbloqueados.map(a=>a.id)),all=g.desbloqueados.concat(g.pendientes);
+  const col=(h,l)=>`<div><h3 class="sub">${h}</h3>${l.length?l.map(a=>`<div class="ach">${ico(g,{...a,ok:1})}<div><b>${esc(a.nombre)}</b><br><small>${a.rareza_global_pct}% global</small></div></div>`).join(""):`<small class="sub">Ninguno</small>`}</div>`;
+  $("#cmpbox").innerHTML=`<div class="cc">${col(U(me)+" tiene y "+U(ot)+" no",all.filter(a=>m.has(a.id)&&!t.has(a.id)))}${col(U(ot)+" tiene y "+U(me)+" no",all.filter(a=>!m.has(a.id)&&t.has(a.id)))}</div>`}
+function renderRoulette(){
+  const el=$("#rl");if(!S.other){el.hidden=true;document.body.classList.remove("rl");return}
+  el.hidden=false;document.body.classList.add("rl");
+  const ids=commonIds();S.wheel=S.games.filter(g=>ids.includes(g.appid)).sort(()=>Math.random()-.5).slice(0,10);const n=S.wheel.length;
+  if(n<2){$("#rlc").innerHTML=`<p class="sub">Necesitan al menos 2 juegos multijugador en común.</p>`;return}
+  const ang=360/n,pt=(a,r)=>[110+r*Math.sin(a*Math.PI/180),110-r*Math.cos(a*Math.PI/180)],cols=["#39ff88","#ff4fd8","#22d3ee","#fbbf24","#a78bfa"];
+  const seg=S.wheel.map((g,i)=>{const[x1,y1]=pt(i*ang,100),[x2,y2]=pt((i+1)*ang,100),mid=(i+.5)*ang,[tx,ty]=pt(mid,62);
+   return`<path d="M110 110L${x1} ${y1}A100 100 0 0 1 ${x2} ${y2}Z" fill="${cols[i%5]}" fill-opacity=".3" stroke="#000"/><text x="${tx}" y="${ty}" font-size="8" fill="#fff" text-anchor="middle" dominant-baseline="middle" transform="rotate(${mid<180?mid-90:mid+90} ${tx} ${ty})">${esc(g.juego.slice(0,14))}</text>`}).join("");
+  $("#rlc").innerHTML=`<div class="wh"><svg id="wh" viewBox="0 0 220 220" style="transform:rotate(${rot}deg)">${seg}</svg><i class="pn"></i></div><button data-a="spin" id="spinb">🎰 Girar</button><p class="sub" id="rr"></p>`}
+let rot=0;
+function spin(){
+  const n=(S.wheel||[]).length;if(n<2||$("#spinb").disabled)return;$("#spinb").disabled=true;
+  const w=Math.random()*n|0,target=360-(w+.5)*(360/n);rot+=360*5+((target-rot%360)+360)%360;
+  $("#wh").style.transform=`rotate(${rot}deg)`;$("#rr").textContent="";sfx("dice");
+  setTimeout(()=>{$("#rr").innerHTML="🎮 "+esc(S.wheel[w].juego);$("#spinb").disabled=false;celebrate()},4300)}
+function spToggle(){const sp=$("#sp");sp.classList.toggle("min");const f=sp.querySelector(".spf");if(!f.firstChild&&SPOTIFY)f.innerHTML=`<iframe title="Spotify" src="${SPOTIFY}" width="100%" height="80" allow="encrypted-media" loading="lazy" style="border:0;border-radius:12px;margin-top:6px"></iframe>`}
+function viewSync(){const am=S.view==="amor";$("#lib").hidden=am;$("#amor").hidden=!am;$("#amorb").classList.toggle("on",am);if(am)renderAmor()}
+function renderAmor(){
+  const f=FOTOS.length?FOTOS:Array.from({length:8},()=>"");
+  $("#amor").innerHTML=`<h2>💗 Nosotros</h2><div class="mas">${f.map((u,i)=>u?`<img src="${esc(u)}" alt="Foto ${i+1}" loading="lazy" style="--d:${i*70}ms;--r:${i%5-2}deg">`:`<div class="ph" style="--h:${120+i*37%90}px;--d:${i*70}ms">💗</div>`).join("")}</div>${FOTOS.length?"":`<p class="sub">Agrega tus fotos en la lista FOTOS del código (sección de configuración).</p>`}`}
+
 // ===== Pantalla de inicio, cuentas y carga =====
 async function landing(){
   let R={};try{const r=await fetch(GIST+"cuentas.json?t="+Date.now());if(r.ok)R=await r.json()}catch{}
   $("#opts").innerHTML=CUENTAS.map(c=>{const x=R[c.id]||{};
    return`<button class="acct gl" data-a="pick" data-id="${c.id}">${x.avatar?`<img src="${esc(x.avatar)}" alt="">`:`<span class="ini">${esc(c.nombre[0].toUpperCase())}</span>`}
-   <h2 class="nm">${esc(c.nombre)}</h2><small>${x.juegos!=null?`${x.juegos} juegos · ${x.platinados} platinos · ${(x.logros||0).toLocaleString("es-CL")} logros`:"Ver logros"}</small></button>`}).join("");
+   <h2 class="nm u-${c.id}">${esc(c.nombre)}</h2><small>${x.juegos!=null?`${x.juegos} juegos · ${x.platinados} platinos · ${(x.logros||0).toLocaleString("es-CL")} logros`:"Ver logros"}</small></button>`}).join("");
 }
 function pick(id){
   const c=CUENTAS.find(x=>x.id===id);if(!c)return;sfx("open");
@@ -324,13 +407,13 @@ function pick(id){
   setTimeout(()=>{h.hidden=true;const a=$("#app");a.hidden=false;a.classList.remove("in");void a.offsetWidth;a.classList.add("in");scrollTo(0,0);cargar(c)},450);
 }
 function home(){
-  closeM();sfx("close");S.cuenta=null;S.bg=0;$("#bg").classList.remove("on");
+  closeM();sfx("close");S.cuenta=null;$("#rl").hidden=true;$("#sp").hidden=true;document.body.classList.remove("rl");S.bg=0;$("#bg").classList.remove("on");
   $("#app").hidden=true;$("#app").classList.remove("in");
   const h=$("#home");h.hidden=false;void h.offsetWidth;h.classList.remove("leave");scrollTo(0,0);
 }
 async function cargar(c){
-  Object.assign(S,{cuenta:c.id,q:"",sort:"plat",near:false,diff:"",mode:"",grp:false,pf:{},bg:0,rnd:null,games:[]});
-  $("#q").value="";$("#sort").value="plat";$("#who").textContent=c.nombre;document.title="Logros de "+c.nombre;
+  Object.assign(S,{cuenta:c.id,com:false,compat:false,view:"lib",other:null,q:"",sort:"plat",near:false,diff:"",mode:"",grp:false,pf:{},bg:0,rnd:null,games:[]});
+  $("#q").value="";$("#sort").value="plat";$("#cm").classList.remove("on");viewSync();$("#who").className="u-"+c.id;$("#who").textContent=c.nombre;document.title="Logros de "+c.nombre;
   ["#stats","#radar","#queue","#grid","#count"].forEach(q=>$(q).innerHTML="");$("#upd").textContent="Cargando…";
   S.queue=ls.get("queue_"+c.id,c.id==="cioccolatuu"?ls.get("queue",[]):[]);
   let d;try{const r=await fetch(GIST+`logros_${c.id}.json?t=`+Date.now());if(!r.ok)throw 0;d=await r.json()}catch{d=DEMO;setTimeout(()=>toast("No pude leer los datos de "+c.nombre+": muestro datos de ejemplo"),500)}
@@ -339,7 +422,7 @@ async function cargar(c){
   const done=S.queue.filter(id=>S.games.some(g=>g.appid===id&&g.plat));   // auto-desmarcado al 100%
   S.queue=S.queue.filter(id=>S.games.some(g=>g.appid===id&&!g.plat));saveQ();
   $("#upd").textContent="Actualizado: "+(d.actualizado||"—").replace("T"," ");
-  renderAll();
+  renderAll();cargarOtro(c);if(SPOTIFY)$("#sp").hidden=false;
   if(done.length){celebrate();toast("🏆 Platino detectado: sale de la cola")}
 }
 landing();
