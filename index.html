@@ -66,7 +66,7 @@ select{background:#111;border:1px solid var(--b);border-radius:10px;padding:8px}
 .mdl[hidden]{display:none}
 #mc{width:min(720px,100%);max-height:88vh;overflow:auto;padding:16px;background:rgba(14,18,26,.94);animation:pop .25s}
 @keyframes fi{from{opacity:0}}@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.97)}}
-#mc>.x{position:sticky;top:0;float:right;z-index:2;background:#000c;margin:0 0 6px 8px}
+#mc>.x,#rc>.x{position:sticky;top:0;float:right;z-index:2;background:#000c;margin:0 0 6px 8px}
 .mh{display:flex;gap:14px;align-items:flex-start}.mh img{width:210px;max-width:38%;border-radius:10px}.mh>div{flex:1;min-width:0}
 #mc .al{padding:0}#mc .sw{padding:10px 0 4px}#mc .note{padding:10px 0 0}
 @media(max-width:520px){.mh{flex-direction:column}.mh img{max-width:100%;width:100%}}
@@ -92,22 +92,28 @@ select{background:#111;border:1px solid var(--b);border-radius:10px;padding:8px}
 .pb{height:22px;background:#ffffff0f;border-radius:8px;margin:3px 0;position:relative;overflow:hidden}.pb i{display:block;height:100%;border-radius:8px}
 .pb em{position:absolute;left:8px;top:1px;font-style:normal;font-size:13px;color:#fff;text-shadow:0 0 4px #000}
 .cc{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}@media(max-width:520px){.cc{grid-template-columns:1fr}}
-#rl{position:fixed;right:14px;top:96px;width:236px;padding:12px;z-index:6;text-align:center;display:none}
-@media(min-width:1180px){#rl:not([hidden]){display:block}body.rl #app{padding-right:264px}}
-.wh{position:relative;width:200px;height:200px;margin:8px auto}#wh{width:100%;transition:transform 4.2s cubic-bezier(.12,.6,.1,1)}
+.wh{position:relative;width:min(400px,86vw);aspect-ratio:1;margin:10px auto}#wh{width:100%;display:block;transition:transform 4.2s cubic-bezier(.12,.6,.1,1)}
 .pn{position:absolute;left:50%;top:-6px;transform:translateX(-50%);border:9px solid transparent;border-top:16px solid var(--au);border-bottom:0}
-#sp{position:fixed;left:12px;bottom:12px;z-index:8;width:min(300px,calc(100% - 24px));padding:6px}#sp.min .spf{display:none}
-.mas{columns:3 200px;gap:12px}.mas img,.mas .ph{width:100%;margin:0 0 12px;border-radius:14px;break-inside:avoid;animation:rise .7s both;animation-delay:var(--d);transition:transform .3s}
-.mas img{transform:rotate(var(--r,0deg))}.mas img:hover{transform:scale(1.04) rotate(0)}
-.mas .ph{height:var(--h);display:grid;place-items:center;font-size:34px;background:linear-gradient(135deg,#ff4fd822,#39ff8822);border:1px solid var(--b)}
+#sp{position:fixed;left:12px;bottom:18px;z-index:8;width:min(300px,calc(100% - 24px));padding:6px;transition:transform .35s}#sp.min{transform:translateX(-120%)}#sp[hidden]{display:none}
+#fab{position:fixed;right:14px;bottom:18px;z-index:7;display:flex;flex-direction:column;gap:10px}#fab[hidden]{display:none}
+#fab button{width:52px;height:52px;border-radius:50%;font-size:22px;padding:0;background:rgba(14,18,26,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+#rs{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;background:#000b;padding:16px;animation:fi .2s}#rs[hidden]{display:none}
+#rc{width:min(420px,100%);padding:18px;text-align:center;background:rgba(14,18,26,.96);animation:pop .3s}#rc img{width:100%;border-radius:12px;margin:10px 0}
+#ph{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:0;transition:opacity .8s}#ph.on{opacity:1}
+#ph .col{position:absolute;top:0;bottom:0;width:clamp(110px,12vw,190px);display:flex;flex-direction:column;justify-content:space-evenly;align-items:center}
+#ph .l{left:10px}#ph .r{right:10px}
+#ph figure{margin:0;width:min(100%,17vh);aspect-ratio:1;transform:rotate(var(--r));border:5px solid #ffffffe0;border-bottom-width:16px;border-radius:4px;background:#111;box-shadow:0 8px 22px #000b,0 0 20px #ff4fd844;display:grid;place-items:center;font-size:28px;animation:rise .8s both}
+#ph img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .6s}
+@media(max-width:900px){#ph.on{opacity:.28}}
 #toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);padding:10px 18px;opacity:0;pointer-events:none;transition:.3s;z-index:5;background:#000c}
 #toast.s{opacity:1}
-#cf{position:fixed;inset:0;pointer-events:none;z-index:9}
+#cf{position:fixed;inset:0;pointer-events:none;z-index:40}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 <div id="bg"></div>
+<div id="ph"></div>
 <canvas id="cf"></canvas>
 <section id="home">
   <div><h1>¿De quién quieres ver la cuenta?</h1><p class="sub">Elige un perfil para abrir su dashboard de logros</p></div>
@@ -116,7 +122,7 @@ select{background:#111;border:1px solid var(--b);border-radius:10px;padding:8px}
 <main id="app" hidden>
 <header>
   <div><h1>Logros de <span id="who"></span></h1><div class="sub" id="upd">Cargando…</div></div>
-  <div><button data-a="home">↩ Cambiar cuenta</button> <button data-a="amor" id="amorb">💗 Amor</button> <button data-a="bg" id="bgb"></button> <button data-a="snd" id="snd"></button></div>
+  <div><button data-a="home">↩ Cambiar cuenta</button> <button data-a="bg" id="bgb"></button> <button data-a="snd" id="snd"></button></div>
 </header>
 
 <p class="row"><button data-a="cm" id="cm">💞 Compatibilidad</button><button data-a="h2h">⚔️ Cara a cara</button></p>
@@ -151,10 +157,10 @@ select{background:#111;border:1px solid var(--b);border-radius:10px;padding:8px}
 <p class="sub" id="count"></p>
 <section class="grid" id="grid"></section>
 </div>
-<section id="amor" hidden></section>
 </main>
-<aside id="rl" class="gl" hidden><b class="nm">🎰 ¿Qué jugamos hoy?</b><div id="rlc"></div></aside>
-<div id="sp" class="gl min" hidden><button data-a="sp">🎵 Playlist</button><div class="spf"></div></div>
+<div id="fab" hidden><button data-a="rl" title="¿Qué jugamos hoy?" aria-label="Ruleta">🎰</button><button data-a="sp" title="Playlist" aria-label="Playlist">🎵</button></div>
+<div id="sp" class="gl min" hidden><div class="spf"></div></div>
+<div id="rs" hidden role="dialog" aria-modal="true" aria-label="Resultado de la ruleta"><div id="rc" class="gl"></div></div>
 <div id="md" class="mdl" hidden role="dialog" aria-modal="true" aria-label="Detalle del juego"><div id="mc" class="gl"></div></div>
 <div id="toast" class="gl"></div>
 
@@ -162,8 +168,9 @@ select{background:#111;border:1px solid var(--b);border-radius:10px;padding:8px}
 // ===== CONFIG: tu Gist (siempre la última versión) =====
 const GIST="https://gist.githubusercontent.com/Cioccolatuu/5a48a8fdfd3590ee577e81916d0f0c7a/raw/";
 const CUENTAS=[{id:"cioccolatuu",nombre:"cioccolatuu"},{id:"habukyy",nombre:"habukyy"}];
-const SPOTIFY="";   // pega aquí el enlace de inserción: https://open.spotify.com/embed/playlist/TU_ID
-const FOTOS=[];     // tus fotos para "Amor": ["fotos/1.jpg","fotos/2.jpg"] (súbelas a una carpeta "fotos" del repositorio)
+const SPOTIFY="";   // pega aquí el enlace normal de tu playlist de Spotify (el de "Compartir")
+const REPO="Cioccolatuu/steam-logros";
+const FOTOS=[];     // opcional: las fotos de la carpeta "fotos" del repositorio se detectan solas
 const COL={cioccolatuu:"#39ff88",habukyy:"#ff4fd8"};
 const U=id=>`<span class="u-${id}">${id}</span>`;
 const OT=()=>S.cuenta==="cioccolatuu"?"habukyy":"cioccolatuu";
@@ -246,6 +253,7 @@ function renderRadar(){
    G.map(([n,v],i)=>{const[x,y]=P(i,R+20);return`<text x="${x}" y="${y}" fill="#8b95a7" font-size="10" text-anchor="middle">${esc(n)} ${Math.round(v)}%</text>`}).join("")+`</svg>`;
 }
 function setBg(){
+  phShow(S.bgm==="amor");
   const b=$("#bg");let g=null;
   if(S.bgm==="queue")g=S.games.find(x=>x.appid===S.queue[0])||null;
   if(S.bgm==="random")g=S.rnd||(S.rnd=S.games[Math.random()*S.games.length|0]);
@@ -256,7 +264,7 @@ function setBg(){
   im.onerror=()=>{if(!im.src.includes("header"))im.src=u+"header.jpg"};
   im.src=u+"library_hero.jpg";
 }
-const BGL={neutro:"Fondo: neutro",queue:"Fondo: mi platino",random:"Fondo: aleatorio"};
+const BGL={neutro:"Fondo: neutro",queue:"Fondo: mi platino",random:"Fondo: aleatorio",amor:"Fondo: amor 💗"};
 function openM(g){
   S.cur=g.appid;const m=g.meta,st=g.store,oo=S.other&&S.other.some(x=>x.appid===g.appid);
   const nota=(m.nota||m.comentario||m.logro_molesto)?`<div class="note">${m.nota?`<b>Mi nota: ${m.nota}/10</b> `:""}${esc(m.comentario||"")}${m.logro_molesto?`<br>😤 Más molesto: ${esc(m.logro_molesto)}`:""}</div>`:"";
@@ -307,7 +315,7 @@ function groups(l){const M={};l.forEach(g=>{const k=g.meta.saga||"Sin saga";(M[k
  return Object.keys(M).sort((a,b)=>a==="Sin saga"?1:b==="Sin saga"?-1:a.localeCompare(b,"es")).map(k=>`<div class="gh">${esc(k)} <span class="sub">(${M[k].length})</span></div>`+M[k].map(card).join("")).join("")}
 function renderGrid(){const l=visible();$("#count").textContent=`Mostrando ${l.length} de ${S.games.length} juegos`;$("#grid").innerHTML=S.grp?groups(l):l.map(card).join("");
  $("#near").classList.toggle("on",S.near);$("#grp").classList.toggle("on",S.grp);$("#com").classList.toggle("on",S.com);["solo","multi"].forEach(v=>$("#md-"+v).classList.toggle("on",S.mode===v));["easy","hard"].forEach(v=>$("#df-"+v).classList.toggle("on",S.diff===v))}
-function renderAll(){renderRoulette();renderStats();renderRadar();renderQueue();renderGrid();$("#snd").textContent=S.sound?"🔊 Sonido: sí":"🔇 Sonido: no";$("#bgb").textContent="🎨 "+BGL[S.bgm]}
+function renderAll(){renderStats();renderRadar();renderQueue();renderGrid();$("#snd").textContent=S.sound?"🔊 Sonido: sí":"🔇 Sonido: no";$("#bgb").textContent="🎨 "+BGL[S.bgm]}
 
 // ===== Acciones =====
 const saveQ=()=>ls.set("queue_"+S.cuenta,S.queue);
@@ -317,10 +325,10 @@ document.addEventListener("click",e=>{
   if(a==="pick")return pick(t.dataset.id);
   if(a==="home")return home();
   if(a==="x"||a==="sw")return;
-  const sn={tg:"open",near:"tick",df:"tick",md:"tick",grp:"tick",bg:"sweep",rnd:"dice",com:"tick",cm:"sweep",h2h:"open",cmp:"tick",amor:"add",sp:"tick"}[a];if(sn)sfx(sn);
+  const sn={tg:"open",near:"tick",df:"tick",md:"tick",grp:"tick",bg:"sweep",rnd:"dice",com:"tick",cm:"sweep",h2h:"open",cmp:"tick",rl:"open",mix:"dice",sp:"tick"}[a];if(sn)sfx(sn);
   if(a==="tg")openM(g);
   else if(a==="cl")closeM();
-  else if(a==="bg"){S.bgm={neutro:"queue",queue:"random",random:"neutro"}[S.bgm];S.rnd=null;S.bg=0;ls.set("bgm",S.bgm);$("#bgb").textContent="🎨 "+BGL[S.bgm];setBg()}
+  else if(a==="bg"){S.bgm={neutro:"queue",queue:"random",random:"amor",amor:"neutro"}[S.bgm];S.rnd=null;S.bg=0;ls.set("bgm",S.bgm);$("#bgb").textContent="🎨 "+BGL[S.bgm];setBg()}
   else if(a==="q"){const i=S.queue.indexOf(id);if(i>=0){S.queue.splice(i,1);sfx("remove")}else if(S.queue.length>=3){sfx("error");return toast("Máximo 3 platinos en cola")}else{S.queue.push(id);sfx("add")}saveQ();renderQueue();renderGrid()}
   else if(a==="cf"){if(g.plat){S.queue=S.queue.filter(x=>x!==id);saveQ();celebrate();toast("🏆 ¡Platino confirmado: "+g.juego+"!");renderQueue();renderGrid()}else{sfx("error");toast(`Aún faltan ${g.logros_total-g.logros_desbloqueados} logros`)}}
   else if(a==="near"){S.near=!S.near;renderGrid()}
@@ -331,7 +339,9 @@ document.addEventListener("click",e=>{
   else if(a==="h2h")h2h();
   else if(a==="cmp")cmpAch(g);
   else if(a==="spin")spin();
-  else if(a==="amor"){S.view=S.view==="amor"?"lib":"amor";viewSync()}
+  else if(a==="rl"||a==="mix")openRoulette();
+  else if(a==="cr")closeR();
+  else if(a==="again"){closeR();spin()}
   else if(a==="sp")spToggle();
   else if(a==="df"){S.diff=S.diff===t.dataset.v?"":t.dataset.v;renderGrid()}
   else if(a==="snd"){S.sound=!S.sound;ls.set("sound",S.sound);renderAll();sfx("tick")}
@@ -346,7 +356,8 @@ document.addEventListener("click",e=>{
 document.addEventListener("change",e=>{const t=e.target;
   if(t.dataset.a==="sw"){sfx("tick");const id=+t.dataset.id;S.pf[id]=t.checked;$("#al"+id).innerHTML=achList(S.games.find(x=>x.appid===id))}});
 $("#md").addEventListener("click",e=>{if(e.target.id==="md")closeM()});
-document.addEventListener("keydown",e=>{if(e.key==="Escape")closeM()});
+$("#rs").addEventListener("click",e=>{if(e.target.id==="rs")closeR()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){if(!$("#rs").hidden)closeR();else closeM()}});
 $("#q").addEventListener("input",e=>{S.q=e.target.value;renderGrid()});
 $("#sort").addEventListener("change",e=>{S.sort=e.target.value;renderGrid();sfx("tick")});
 
@@ -373,26 +384,40 @@ function cmpAch(g){
   const o=S.other.find(x=>x.appid===g.appid);if(!o)return;const me=S.cuenta,ot=OT(),m=new Set(g.desbloqueados.map(a=>a.id)),t=new Set(o.desbloqueados.map(a=>a.id)),all=g.desbloqueados.concat(g.pendientes);
   const col=(h,l)=>`<div><h3 class="sub">${h}</h3>${l.length?l.map(a=>`<div class="ach">${ico(g,{...a,ok:1})}<div><b>${esc(a.nombre)}</b><br><small>${a.rareza_global_pct}% global</small></div></div>`).join(""):`<small class="sub">Ninguno</small>`}</div>`;
   $("#cmpbox").innerHTML=`<div class="cc">${col(U(me)+" tiene y "+U(ot)+" no",all.filter(a=>m.has(a.id)&&!t.has(a.id)))}${col(U(ot)+" tiene y "+U(me)+" no",all.filter(a=>!m.has(a.id)&&t.has(a.id)))}</div>`}
-function renderRoulette(){
-  const el=$("#rl");if(!S.other){el.hidden=true;document.body.classList.remove("rl");return}
-  el.hidden=false;document.body.classList.add("rl");
-  const ids=commonIds();S.wheel=S.games.filter(g=>ids.includes(g.appid)).sort(()=>Math.random()-.5).slice(0,10);const n=S.wheel.length;
-  if(n<2){$("#rlc").innerHTML=`<p class="sub">Necesitan al menos 2 juegos multijugador en común.</p>`;return}
-  const ang=360/n,pt=(a,r)=>[110+r*Math.sin(a*Math.PI/180),110-r*Math.cos(a*Math.PI/180)],cols=["#39ff88","#ff4fd8","#22d3ee","#fbbf24","#a78bfa"];
-  const seg=S.wheel.map((g,i)=>{const[x1,y1]=pt(i*ang,100),[x2,y2]=pt((i+1)*ang,100),mid=(i+.5)*ang,[tx,ty]=pt(mid,62);
-   return`<path d="M110 110L${x1} ${y1}A100 100 0 0 1 ${x2} ${y2}Z" fill="${cols[i%5]}" fill-opacity=".3" stroke="#000"/><text x="${tx}" y="${ty}" font-size="8" fill="#fff" text-anchor="middle" dominant-baseline="middle" transform="rotate(${mid<180?mid-90:mid+90} ${tx} ${ty})">${esc(g.juego.slice(0,14))}</text>`}).join("");
-  $("#rlc").innerHTML=`<div class="wh"><svg id="wh" viewBox="0 0 220 220" style="transform:rotate(${rot}deg)">${seg}</svg><i class="pn"></i></div><button data-a="spin" id="spinb">🎰 Girar</button><p class="sub" id="rr"></p>`}
 let rot=0;
+function openRoulette(){
+  if(!S.other)return toast("Aún no cargan los datos de la otra cuenta");
+  const ids=commonIds();S.wheel=S.games.filter(g=>ids.includes(g.appid)).sort(()=>Math.random()-.5).slice(0,8);const n=S.wheel.length;rot=0;
+  if(n<2)return showM(`<h2 style="margin-top:0">🎰 ¿Qué jugamos hoy?</h2><p class="sub">Necesitan al menos 2 juegos multijugador en común para girar la ruleta.</p>`);
+  const ang=360/n,pt=(a,r)=>[110+r*Math.sin(a*Math.PI/180),110-r*Math.cos(a*Math.PI/180)],cols=["#39ff88","#ff4fd8","#22d3ee","#fbbf24","#a78bfa"];
+  const seg=S.wheel.map((g,i)=>{const[x1,y1]=pt(i*ang,104),[x2,y2]=pt((i+1)*ang,104),mid=(i+.5)*ang,[tx,ty]=pt(mid,64),nm=g.juego.length>17?g.juego.slice(0,16)+"…":g.juego;
+   return`<path d="M110 110L${x1} ${y1}A104 104 0 0 1 ${x2} ${y2}Z" fill="${cols[i%5]}" fill-opacity=".32" stroke="#000"/><text x="${tx}" y="${ty}" font-size="8.5" font-weight="700" fill="#fff" text-anchor="middle" dominant-baseline="middle" transform="rotate(${mid<180?mid-90:mid+90} ${tx} ${ty})">${esc(nm)}</text>`}).join("");
+  showM(`<h2 style="margin-top:0">🎰 ¿Qué jugamos hoy?</h2><p class="sub">Juegos multijugador que ${U("cioccolatuu")} y ${U("habukyy")} tienen en común</p>
+   <div class="wh"><svg id="wh" viewBox="0 0 220 220">${seg}</svg><i class="pn"></i></div>
+   <p style="text-align:center"><button data-a="spin" id="spinb">🎰 Girar</button> <button data-a="mix">🔀 Mezclar juegos</button></p>`)}
 function spin(){
-  const n=(S.wheel||[]).length;if(n<2||$("#spinb").disabled)return;$("#spinb").disabled=true;
+  const b=$("#spinb"),n=(S.wheel||[]).length;if(!b||n<2||b.disabled)return;b.disabled=true;
   const w=Math.random()*n|0,target=360-(w+.5)*(360/n);rot+=360*5+((target-rot%360)+360)%360;
-  $("#wh").style.transform=`rotate(${rot}deg)`;$("#rr").textContent="";sfx("dice");
-  setTimeout(()=>{$("#rr").innerHTML="🎮 "+esc(S.wheel[w].juego);$("#spinb").disabled=false;celebrate()},4300)}
-function spToggle(){const sp=$("#sp");sp.classList.toggle("min");const f=sp.querySelector(".spf");if(!f.firstChild&&SPOTIFY)f.innerHTML=`<iframe title="Spotify" src="${SPOTIFY}" width="100%" height="80" allow="encrypted-media" loading="lazy" style="border:0;border-radius:12px;margin-top:6px"></iframe>`}
-function viewSync(){const am=S.view==="amor";$("#lib").hidden=am;$("#amor").hidden=!am;$("#amorb").classList.toggle("on",am);if(am)renderAmor()}
-function renderAmor(){
-  const f=FOTOS.length?FOTOS:Array.from({length:8},()=>"");
-  $("#amor").innerHTML=`<h2>💗 Nosotros</h2><div class="mas">${f.map((u,i)=>u?`<img src="${esc(u)}" alt="Foto ${i+1}" loading="lazy" style="--d:${i*70}ms;--r:${i%5-2}deg">`:`<div class="ph" style="--h:${120+i*37%90}px;--d:${i*70}ms">💗</div>`).join("")}</div>${FOTOS.length?"":`<p class="sub">Agrega tus fotos en la lista FOTOS del código (sección de configuración).</p>`}`}
+  $("#wh").style.transform=`rotate(${rot}deg)`;sfx("dice");
+  setTimeout(()=>{const bb=$("#spinb");if(bb)bb.disabled=false;if($("#wh"))showR(S.wheel[w])},4300)}
+function showR(g){
+  $("#rc").innerHTML=`<button class="x" data-a="cr" aria-label="Cerrar">✕</button><div class="sub">¡Hoy toca!</div><img src="${cover(g.appid)}" alt="" onerror="this.style.display='none'"><div class="nm">🎮 ${esc(g.juego)}</div><p style="margin-top:14px"><button data-a="again">🔁 Girar de nuevo</button> <button data-a="cr">Cerrar</button></p>`;
+  $("#rs").hidden=false;celebrate()}
+function closeR(){$("#rs").hidden=true}
+const spUrl=()=>SPOTIFY.replace(/^(https?:\/\/open\.spotify\.com\/)(?!embed)/,"$1embed/").split("?")[0];
+function spToggle(){const sp=$("#sp");sp.classList.toggle("min");const f=sp.querySelector(".spf");if(f.firstChild)return;
+  f.innerHTML=SPOTIFY?`<iframe title="Spotify" src="${esc(spUrl())}" width="100%" height="80" allow="encrypted-media" loading="lazy" style="border:0;border-radius:12px"></iframe>`:`<p class="sub" style="margin:8px">Aún no hay una playlist configurada.</p>`}
+let PH=null;
+async function loadPhotos(){
+  if(PH)return PH;let l=FOTOS.slice();
+  if(!l.length){try{const r=await fetch("https://api.github.com/repos/"+REPO+"/contents/fotos");if(r.ok)l=(await r.json()).filter(f=>/\.(jpe?g|png|webp|gif)$/i.test(f.name)).map(f=>"fotos/"+encodeURIComponent(f.name))}catch{}}
+  return PH=l}
+async function phShow(on){
+  const el=$("#ph");el.classList.toggle("on",on);if(!on||el.dataset.b)return;el.dataset.b="1";
+  const l=(await loadPhotos()).slice().sort(()=>Math.random()-.5),N=10,items=Array.from({length:N},(_,i)=>l.length?l[i%l.length]:"");
+  el.innerHTML=["l","r"].map((sd,k)=>`<div class="col ${sd}">${items.filter((_,i)=>i%2===k).map((u,i)=>`<figure style="--r:${(i*7+k*4)%13-6}deg">${u?`<img src="${esc(u)}" alt="" loading="lazy">`:`<span>💗</span>`}</figure>`).join("")}</div>`).join("");
+  if(!l.length)toast("Sube tus fotos a la carpeta «fotos» del repositorio");
+  else if(l.length>N)setInterval(()=>{const im=[...el.querySelectorAll("img")];if(!el.classList.contains("on")||!im.length)return;const x=im[Math.random()*im.length|0];x.style.opacity=0;setTimeout(()=>{x.src=l[Math.random()*l.length|0];x.style.opacity=1},650)},9000)}
 
 // ===== Pantalla de inicio, cuentas y carga =====
 async function landing(){
@@ -407,13 +432,13 @@ function pick(id){
   setTimeout(()=>{h.hidden=true;const a=$("#app");a.hidden=false;a.classList.remove("in");void a.offsetWidth;a.classList.add("in");scrollTo(0,0);cargar(c)},450);
 }
 function home(){
-  closeM();sfx("close");S.cuenta=null;$("#rl").hidden=true;$("#sp").hidden=true;document.body.classList.remove("rl");S.bg=0;$("#bg").classList.remove("on");
+  closeM();sfx("close");S.cuenta=null;$("#fab").hidden=true;$("#sp").hidden=true;$("#rs").hidden=true;phShow(false);S.bg=0;$("#bg").classList.remove("on");
   $("#app").hidden=true;$("#app").classList.remove("in");
   const h=$("#home");h.hidden=false;void h.offsetWidth;h.classList.remove("leave");scrollTo(0,0);
 }
 async function cargar(c){
-  Object.assign(S,{cuenta:c.id,com:false,compat:false,view:"lib",other:null,q:"",sort:"plat",near:false,diff:"",mode:"",grp:false,pf:{},bg:0,rnd:null,games:[]});
-  $("#q").value="";$("#sort").value="plat";$("#cm").classList.remove("on");viewSync();$("#who").className="u-"+c.id;$("#who").textContent=c.nombre;document.title="Logros de "+c.nombre;
+  Object.assign(S,{cuenta:c.id,com:false,compat:false,other:null,q:"",sort:"plat",near:false,diff:"",mode:"",grp:false,pf:{},bg:0,rnd:null,games:[]});
+  $("#q").value="";$("#sort").value="plat";$("#cm").classList.remove("on");$("#who").className="u-"+c.id;$("#who").textContent=c.nombre;document.title="Logros de "+c.nombre;
   ["#stats","#radar","#queue","#grid","#count"].forEach(q=>$(q).innerHTML="");$("#upd").textContent="Cargando…";
   S.queue=ls.get("queue_"+c.id,c.id==="cioccolatuu"?ls.get("queue",[]):[]);
   let d;try{const r=await fetch(GIST+`logros_${c.id}.json?t=`+Date.now());if(!r.ok)throw 0;d=await r.json()}catch{d=DEMO;setTimeout(()=>toast("No pude leer los datos de "+c.nombre+": muestro datos de ejemplo"),500)}
@@ -422,7 +447,7 @@ async function cargar(c){
   const done=S.queue.filter(id=>S.games.some(g=>g.appid===id&&g.plat));   // auto-desmarcado al 100%
   S.queue=S.queue.filter(id=>S.games.some(g=>g.appid===id&&!g.plat));saveQ();
   $("#upd").textContent="Actualizado: "+(d.actualizado||"—").replace("T"," ");
-  renderAll();cargarOtro(c);if(SPOTIFY)$("#sp").hidden=false;
+  renderAll();cargarOtro(c);$("#fab").hidden=false;$("#sp").hidden=false;
   if(done.length){celebrate();toast("🏆 Platino detectado: sale de la cola")}
 }
 landing();
