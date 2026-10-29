@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Logros Steam · Cioccolatuu</title>
+<title>Logros Steam</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&display=swap" rel="stylesheet">
 <style>
@@ -70,6 +70,18 @@ select{background:#111;border:1px solid var(--b);border-radius:10px;padding:8px}
 .mh{display:flex;gap:14px;align-items:flex-start}.mh img{width:210px;max-width:38%;border-radius:10px}.mh>div{flex:1;min-width:0}
 #mc .al{padding:0}#mc .sw{padding:10px 0 4px}#mc .note{padding:10px 0 0}
 @media(max-width:520px){.mh{flex-direction:column}.mh img{max-width:100%;width:100%}}
+#home{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px;padding:24px;text-align:center;transition:opacity .45s,transform .45s,filter .45s}
+#home[hidden]{display:none}#home.leave{opacity:0;transform:scale(1.05);filter:blur(10px);pointer-events:none}
+#home h1{font-size:clamp(28px,5vw,46px);margin:0}#home p{margin:0}
+#opts{display:flex;flex-wrap:wrap;gap:22px;justify-content:center}
+.acct{--ac:var(--c);width:260px;padding:28px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;border-radius:22px;animation:rise .7s both;transition:transform .3s,box-shadow .3s,border-color .3s}
+.acct:nth-child(2){--ac:#a78bfa;animation-delay:.12s}
+.acct:hover{transform:translateY(-8px) scale(1.02);border-color:var(--ac);box-shadow:0 18px 50px #000a,0 0 34px color-mix(in srgb,var(--ac) 40%,transparent)}
+.acct img,.ini{width:104px;height:104px;border-radius:50%;object-fit:cover;border:3px solid var(--ac);box-shadow:0 0 24px color-mix(in srgb,var(--ac) 50%,transparent)}
+.ini{display:grid;place-items:center;font:700 44px "Chakra Petch",sans-serif;background:#ffffff0d;color:var(--ac)}
+.acct .nm{font-size:22px;margin:0}.acct small{color:var(--m)}
+#app.in{animation:rise .6s cubic-bezier(.2,.8,.2,1)}
+@keyframes rise{from{opacity:0;transform:translateY(26px);filter:blur(6px)}}
 #toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);padding:10px 18px;opacity:0;pointer-events:none;transition:.3s;z-index:5;background:#000c}
 #toast.s{opacity:1}
 #cf{position:fixed;inset:0;pointer-events:none;z-index:9}
@@ -79,10 +91,14 @@ select{background:#111;border:1px solid var(--b);border-radius:10px;padding:8px}
 <body>
 <div id="bg"></div>
 <canvas id="cf"></canvas>
-<main>
+<section id="home">
+  <div><h1>¿De quién quieres ver la cuenta?</h1><p class="sub">Elige un perfil para abrir su dashboard de logros</p></div>
+  <div id="opts"></div>
+</section>
+<main id="app" hidden>
 <header>
-  <div><h1>Logros de <span>Cioccolatuu</span></h1><div class="sub" id="upd">Cargando…</div></div>
-  <div><button data-a="bg" id="bgb"></button> <button data-a="snd" id="snd"></button></div>
+  <div><h1>Logros de <span id="who"></span></h1><div class="sub" id="upd">Cargando…</div></div>
+  <div><button data-a="home">↩ Cambiar cuenta</button> <button data-a="bg" id="bgb"></button> <button data-a="snd" id="snd"></button></div>
 </header>
 
 <section class="stats" id="stats"></section>
@@ -119,7 +135,8 @@ select{background:#111;border:1px solid var(--b);border-radius:10px;padding:8px}
 
 <script>
 // ===== CONFIG: tu Gist (siempre la última versión) =====
-const DATA_URL="https://gist.githubusercontent.com/Cioccolatuu/5a48a8fdfd3590ee577e81916d0f0c7a/raw/logros_steam.json";
+const GIST="https://gist.githubusercontent.com/Cioccolatuu/5a48a8fdfd3590ee577e81916d0f0c7a/raw/";
+const CUENTAS=[{id:"cioccolatuu",nombre:"cioccolatuu"},{id:"habukyy",nombre:"habukyy"}];
 
 // ===== Utilidades =====
 const $=s=>document.querySelector(s);
@@ -130,7 +147,7 @@ const fd=d=>d.toLocaleDateString("es-CL");
 const cover=id=>`https://cdn.cloudflare.steamstatic.com/steam/apps/${id}/header.jpg`;
 
 // ===== Estado =====
-const S={games:[],q:"",sort:"plat",near:false,diff:"",mode:"",grp:false,bgm:ls.get("bgm","neutro"),queue:ls.get("queue",[]),sound:ls.get("sound",true),open:new Set(),pf:{}};
+const S={games:[],q:"",sort:"plat",near:false,diff:"",mode:"",grp:false,bgm:ls.get("bgm","neutro"),queue:[],sound:ls.get("sound",true),open:new Set(),pf:{}};
 
 // ===== Datos de ejemplo (si el Gist no responde) =====
 const mk=(a,n,h,u,p,x={})=>({appid:a,juego:n,horas_jugadas:h,logros_total:u+p,logros_desbloqueados:u,completado_pct:Math.round(u/(u+p)*1000)/10,
@@ -261,10 +278,12 @@ function renderGrid(){const l=visible();$("#count").textContent=`Mostrando ${l.l
 function renderAll(){renderStats();renderRadar();renderQueue();renderGrid();$("#snd").textContent=S.sound?"🔊 Sonido: sí":"🔇 Sonido: no";$("#bgb").textContent="🎨 "+BGL[S.bgm]}
 
 // ===== Acciones =====
-const saveQ=()=>ls.set("queue",S.queue);
+const saveQ=()=>ls.set("queue_"+S.cuenta,S.queue);
 document.addEventListener("click",e=>{
   const t=e.target.closest("[data-a]");if(!t)return;
   const a=t.dataset.a,id=+t.dataset.id,g=S.games.find(x=>x.appid===id);
+  if(a==="pick")return pick(t.dataset.id);
+  if(a==="home")return home();
   if(a==="x"||a==="sw")return;
   const sn={tg:"open",near:"tick",df:"tick",md:"tick",grp:"tick",bg:"sweep",rnd:"dice"}[a];if(sn)sfx(sn);
   if(a==="tg")openM(g);
@@ -292,16 +311,38 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")closeM()});
 $("#q").addEventListener("input",e=>{S.q=e.target.value;renderGrid()});
 $("#sort").addEventListener("change",e=>{S.sort=e.target.value;renderGrid();sfx("tick")});
 
-// ===== Carga =====
-(async()=>{
-  let d;try{const r=await fetch(DATA_URL+"?t="+Date.now());if(!r.ok)throw 0;d=await r.json()}catch{d=DEMO;setTimeout(()=>toast("No se pudo leer el Gist: mostrando datos de ejemplo"),500)}
+// ===== Pantalla de inicio, cuentas y carga =====
+async function landing(){
+  let R={};try{const r=await fetch(GIST+"cuentas.json?t="+Date.now());if(r.ok)R=await r.json()}catch{}
+  $("#opts").innerHTML=CUENTAS.map(c=>{const x=R[c.id]||{};
+   return`<button class="acct gl" data-a="pick" data-id="${c.id}">${x.avatar?`<img src="${esc(x.avatar)}" alt="">`:`<span class="ini">${esc(c.nombre[0].toUpperCase())}</span>`}
+   <h2 class="nm">${esc(c.nombre)}</h2><small>${x.juegos!=null?`${x.juegos} juegos · ${x.platinados} platinos · ${(x.logros||0).toLocaleString("es-CL")} logros`:"Ver logros"}</small></button>`}).join("");
+}
+function pick(id){
+  const c=CUENTAS.find(x=>x.id===id);if(!c)return;sfx("open");
+  const h=$("#home");h.classList.add("leave");
+  setTimeout(()=>{h.hidden=true;const a=$("#app");a.hidden=false;a.classList.remove("in");void a.offsetWidth;a.classList.add("in");scrollTo(0,0);cargar(c)},450);
+}
+function home(){
+  closeM();sfx("close");S.cuenta=null;S.bg=0;$("#bg").classList.remove("on");
+  $("#app").hidden=true;$("#app").classList.remove("in");
+  const h=$("#home");h.hidden=false;void h.offsetWidth;h.classList.remove("leave");scrollTo(0,0);
+}
+async function cargar(c){
+  Object.assign(S,{cuenta:c.id,q:"",sort:"plat",near:false,diff:"",mode:"",grp:false,pf:{},bg:0,rnd:null,games:[]});
+  $("#q").value="";$("#sort").value="plat";$("#who").textContent=c.nombre;document.title="Logros de "+c.nombre;
+  ["#stats","#radar","#queue","#grid","#count"].forEach(q=>$(q).innerHTML="");$("#upd").textContent="Cargando…";
+  S.queue=ls.get("queue_"+c.id,c.id==="cioccolatuu"?ls.get("queue",[]):[]);
+  let d;try{const r=await fetch(GIST+`logros_${c.id}.json?t=`+Date.now());if(!r.ok)throw 0;d=await r.json()}catch{d=DEMO;setTimeout(()=>toast("No pude leer los datos de "+c.nombre+": muestro datos de ejemplo"),500)}
+  if(S.cuenta!==c.id)return;   // cambiaste de cuenta mientras cargaba
   S.games=d.juegos.map(prep);
   const done=S.queue.filter(id=>S.games.some(g=>g.appid===id&&g.plat));   // auto-desmarcado al 100%
   S.queue=S.queue.filter(id=>S.games.some(g=>g.appid===id&&!g.plat));saveQ();
   $("#upd").textContent="Actualizado: "+(d.actualizado||"—").replace("T"," ");
   renderAll();
   if(done.length){celebrate();toast("🏆 Platino detectado: sale de la cola")}
-})();
+}
+landing();
 </script>
 </body>
 </html>
