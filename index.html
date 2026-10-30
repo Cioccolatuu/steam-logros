@@ -94,7 +94,6 @@ select{background:#111;border:1px solid var(--b);border-radius:10px;padding:8px}
 .cc{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}@media(max-width:520px){.cc{grid-template-columns:1fr}}
 .wh{position:relative;width:min(400px,86vw);aspect-ratio:1;margin:10px auto}#wh{width:100%;display:block;transition:transform 4.2s cubic-bezier(.12,.6,.1,1)}
 .pn{position:absolute;left:50%;top:-6px;transform:translateX(-50%);border:9px solid transparent;border-top:16px solid var(--au);border-bottom:0}
-#sp{position:fixed;left:12px;bottom:18px;z-index:8;width:min(300px,calc(100% - 24px));padding:6px;transition:transform .35s}#sp.min{transform:translateX(-120%)}#sp[hidden]{display:none}
 #fab{position:fixed;right:14px;bottom:18px;z-index:7;display:flex;flex-direction:column;gap:10px}#fab[hidden]{display:none}
 #fab button{width:52px;height:52px;border-radius:50%;font-size:22px;padding:0;background:rgba(14,18,26,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 #rs{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;background:#000b;padding:16px;animation:fi .2s}#rs[hidden]{display:none}
@@ -105,6 +104,7 @@ select{background:#111;border:1px solid var(--b);border-radius:10px;padding:8px}
 #ph figure{margin:0;width:min(100%,17vh);aspect-ratio:1;transform:rotate(var(--r));border:5px solid #ffffffe0;border-bottom-width:16px;border-radius:4px;background:#111;box-shadow:0 8px 22px #000b,0 0 20px #ff4fd844;display:grid;place-items:center;font-size:28px;animation:rise .8s both}
 #ph img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .6s}
 @media(max-width:900px){#ph.on{opacity:.28}}
+@media(min-width:901px){body.amor #app{max-width:min(1200px,calc(100vw - 2*clamp(110px,12vw,190px) - 40px))}}
 #toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);padding:10px 18px;opacity:0;pointer-events:none;transition:.3s;z-index:5;background:#000c}
 #toast.s{opacity:1}
 #cf{position:fixed;inset:0;pointer-events:none;z-index:40}
@@ -158,8 +158,7 @@ select{background:#111;border:1px solid var(--b);border-radius:10px;padding:8px}
 <section class="grid" id="grid"></section>
 </div>
 </main>
-<div id="fab" hidden><button data-a="rl" title="¿Qué jugamos hoy?" aria-label="Ruleta">🎰</button><button data-a="sp" title="Playlist" aria-label="Playlist">🎵</button></div>
-<div id="sp" class="gl min" hidden><div class="spf"></div></div>
+<div id="fab" hidden><button data-a="rl" title="¿Qué jugamos hoy?" aria-label="Ruleta">🎰</button></div>
 <div id="rs" hidden role="dialog" aria-modal="true" aria-label="Resultado de la ruleta"><div id="rc" class="gl"></div></div>
 <div id="md" class="mdl" hidden role="dialog" aria-modal="true" aria-label="Detalle del juego"><div id="mc" class="gl"></div></div>
 <div id="toast" class="gl"></div>
@@ -168,7 +167,6 @@ select{background:#111;border:1px solid var(--b);border-radius:10px;padding:8px}
 // ===== CONFIG: tu Gist (siempre la última versión) =====
 const GIST="https://gist.githubusercontent.com/Cioccolatuu/5a48a8fdfd3590ee577e81916d0f0c7a/raw/";
 const CUENTAS=[{id:"cioccolatuu",nombre:"cioccolatuu"},{id:"habukyy",nombre:"habukyy"}];
-const SPOTIFY="https://open.spotify.com/playlist/2QpUvxEgR1xYpS8PL244FU";   // enlace normal de la playlist (el de "Compartir")
 const REPO="Cioccolatuu/steam-logros";
 const FOTOS=["fotos/IMG_7500.jpg","fotos/IMG_7501.jpg","fotos/IMG_7502.jpg","fotos/IMG_7503.jpg","fotos/IMG_7504.jpg","fotos/IMG_7505.jpg","fotos/IMG_7506.jpg","fotos/IMG_7507.jpg","fotos/IMG_7509.jpg","fotos/IMG_7510.jpg","fotos/IMG_7511.jpg","fotos/IMG_7512.jpg","fotos/IMG_7513.jpg","fotos/IMG_7514.jpg","fotos/IMG_7515.jpg","fotos/IMG_7516.jpg","fotos/IMG_7517.jpg","fotos/IMG_7518.jpg","fotos/IMG_7519.jpg","fotos/IMG_7520.jpg"];     // respaldo: normalmente las fotos de la carpeta "fotos" se detectan solas
 const COL={cioccolatuu:"#39ff88",habukyy:"#ff4fd8"};
@@ -325,7 +323,7 @@ document.addEventListener("click",e=>{
   if(a==="pick")return pick(t.dataset.id);
   if(a==="home")return home();
   if(a==="x"||a==="sw")return;
-  const sn={tg:"open",near:"tick",df:"tick",md:"tick",grp:"tick",bg:"sweep",rnd:"dice",com:"tick",cm:"sweep",h2h:"open",cmp:"tick",rl:"open",mix:"dice",sp:"tick"}[a];if(sn)sfx(sn);
+  const sn={tg:"open",near:"tick",df:"tick",md:"tick",grp:"tick",bg:"sweep",rnd:"dice",com:"tick",cm:"sweep",h2h:"open",cmp:"tick",rl:"open",mix:"dice"}[a];if(sn)sfx(sn);
   if(a==="tg")openM(g);
   else if(a==="cl")closeM();
   else if(a==="bg"){S.bgm={neutro:"queue",queue:"random",random:"amor",amor:"neutro"}[S.bgm];S.rnd=null;S.bg=0;ls.set("bgm",S.bgm);$("#bgb").textContent="🎨 "+BGL[S.bgm];setBg()}
@@ -342,7 +340,6 @@ document.addEventListener("click",e=>{
   else if(a==="rl"||a==="mix")openRoulette();
   else if(a==="cr")closeR();
   else if(a==="again"){closeR();spin()}
-  else if(a==="sp")spToggle();
   else if(a==="df"){S.diff=S.diff===t.dataset.v?"":t.dataset.v;renderGrid()}
   else if(a==="snd"){S.sound=!S.sound;ls.set("sound",S.sound);renderAll();sfx("tick")}
   else if(a==="rnd"){const l=visible().filter(g=>!g.plat);if(!l.length){sfx("error");return toast("No hay juegos pendientes con estos filtros")}
@@ -404,34 +401,18 @@ function showR(g){
   $("#rc").innerHTML=`<button class="x" data-a="cr" aria-label="Cerrar">✕</button><div class="sub">¡Hoy toca!</div><img src="${cover(g.appid)}" alt="" onerror="this.style.display='none'"><div class="nm">🎮 ${esc(g.juego)}</div><p style="margin-top:14px"><button data-a="again">🔁 Girar de nuevo</button> <button data-a="cr">Cerrar</button></p>`;
   $("#rs").hidden=false;celebrate()}
 function closeR(){$("#rs").hidden=true}
-const spUrl=()=>SPOTIFY.replace(/^(https?:\/\/open\.spotify\.com\/)(?!embed)/,"$1embed/").split("?")[0];
-let SPT=[],SPQ=[],SPL=false,SPOK=false,SPLAST={pos:0,dur:0};
-const spNext=()=>{if(!SPQ.length)SPQ=SPT.slice().sort(()=>Math.random()-.5);return"spotify:track:"+SPQ.pop()};   // aleatorio sin repetir hasta agotar la lista
-function spPlain(f){f.innerHTML=`<iframe title="Spotify" src="${esc(spUrl())}" width="100%" height="80" allow="encrypted-media" loading="lazy" style="border:0;border-radius:12px"></iframe>`}
-async function spToggle(){
-  const sp=$("#sp");sp.classList.toggle("min");const f=sp.querySelector(".spf");if(f.dataset.b)return;f.dataset.b="1";   // nada suena hasta que lo activas
-  if(!SPOTIFY){f.innerHTML=`<p class="sub" style="margin:8px">Aún no hay una playlist configurada.</p>`;return}
-  try{const r=await fetch(GIST+"playlist.json?t="+Date.now());if(r.ok)SPT=(await r.json()).tracks||[]}catch{}
-  if(SPT.length<2)return spPlain(f);   // sin lista de canciones: reproductor normal de la playlist
-  f.innerHTML=`<div id="spe"></div>`;
-  window.onSpotifyIframeApiReady=A=>A.createController($("#spe"),{uri:spNext(),width:"100%",height:80},c=>{SPOK=true;
-    c.addListener("ready",()=>c.play());
-    c.addListener("playback_update",e=>{const d=e.data||{};
-      if(!d.isPaused){SPLAST={pos:d.position,dur:d.duration};return}
-      if(!SPL&&SPLAST.dur>0&&SPLAST.dur-SPLAST.pos<3000){SPL=true;SPLAST={pos:0,dur:0};c.loadUri(spNext());setTimeout(()=>{c.play();SPL=false},1500)}})});   // al terminar una canción, sigue otra al azar
-  const sc=document.createElement("script");sc.src="https://open.spotify.com/embed/iframe-api/v1";sc.async=true;sc.onerror=()=>spPlain(f);document.body.appendChild(sc);
-  setTimeout(()=>{if(!SPOK)spPlain(f)},6000)}
 let PH=null;
 async function loadPhotos(){
   if(PH)return PH;let l=[];
   if(!l.length){try{const r=await fetch("https://api.github.com/repos/"+REPO+"/contents/fotos");if(r.ok)l=(await r.json()).filter(f=>/\.(jpe?g|png|webp|gif)$/i.test(f.name)).map(f=>"fotos/"+encodeURIComponent(f.name))}catch{}}
   if(!l.length)l=FOTOS.slice();return PH=l}
 async function phShow(on){
-  const el=$("#ph");el.classList.toggle("on",on);if(!on||el.dataset.b)return;el.dataset.b="1";
+  const el=$("#ph");el.classList.toggle("on",on);document.body.classList.toggle("amor",on);if(!on||el.dataset.b)return;el.dataset.b="1";
   const l=(await loadPhotos()).slice().sort(()=>Math.random()-.5),N=10,items=Array.from({length:N},(_,i)=>l.length?l[i%l.length]:"");
-  el.innerHTML=["l","r"].map((sd,k)=>`<div class="col ${sd}">${items.filter((_,i)=>i%2===k).map((u,i)=>`<figure style="--r:${(i*7+k*4)%13-6}deg">${u?`<img src="${esc(u)}" alt="" loading="lazy">`:`<span>💗</span>`}</figure>`).join("")}</div>`).join("");
+  el.innerHTML=["l","r"].map((sd,k)=>`<div class="col ${sd}">${items.filter((_,i)=>i%2===k).map((u,i)=>`<figure style="--r:${(i*7+k*4)%13-6}deg">${u?`<img src="${esc(u)}" alt="" loading="lazy" onerror="this.outerHTML='<span>💗</span>'">`:`<span>💗</span>`}</figure>`).join("")}</div>`).join("");
   if(!l.length)toast("Sube tus fotos a la carpeta «fotos» del repositorio");
-  else if(l.length>N)setInterval(()=>{const im=[...el.querySelectorAll("img")];if(!el.classList.contains("on")||!im.length)return;const x=im[Math.random()*im.length|0];x.style.opacity=0;setTimeout(()=>{x.src=l[Math.random()*l.length|0];x.style.opacity=1},650)},9000)}
+  else{const t=new Image();t.onerror=()=>toast("No encuentro las fotos: revisa que la carpeta «fotos» esté dentro del repositorio");t.src=l[0]}
+  if(l.length>N)setInterval(()=>{const im=[...el.querySelectorAll("img")];if(!el.classList.contains("on")||!im.length)return;const x=im[Math.random()*im.length|0];x.style.opacity=0;setTimeout(()=>{x.src=l[Math.random()*l.length|0];x.style.opacity=1},650)},9000)}
 
 // ===== Pantalla de inicio, cuentas y carga =====
 async function landing(){
@@ -446,7 +427,7 @@ function pick(id){
   setTimeout(()=>{h.hidden=true;const a=$("#app");a.hidden=false;a.classList.remove("in");void a.offsetWidth;a.classList.add("in");scrollTo(0,0);cargar(c)},450);
 }
 function home(){
-  closeM();sfx("close");S.cuenta=null;$("#fab").hidden=true;$("#sp").hidden=true;$("#rs").hidden=true;phShow(false);S.bg=0;$("#bg").classList.remove("on");
+  closeM();sfx("close");S.cuenta=null;$("#fab").hidden=true;$("#rs").hidden=true;phShow(false);S.bg=0;$("#bg").classList.remove("on");
   $("#app").hidden=true;$("#app").classList.remove("in");
   const h=$("#home");h.hidden=false;void h.offsetWidth;h.classList.remove("leave");scrollTo(0,0);
 }
@@ -461,7 +442,7 @@ async function cargar(c){
   const done=S.queue.filter(id=>S.games.some(g=>g.appid===id&&g.plat));   // auto-desmarcado al 100%
   S.queue=S.queue.filter(id=>S.games.some(g=>g.appid===id&&!g.plat));saveQ();
   $("#upd").textContent="Actualizado: "+(d.actualizado||"—").replace("T"," ");
-  renderAll();cargarOtro(c);$("#fab").hidden=false;$("#sp").hidden=false;
+  renderAll();cargarOtro(c);$("#fab").hidden=false;
   if(done.length){celebrate();toast("🏆 Platino detectado: sale de la cola")}
 }
 landing();
