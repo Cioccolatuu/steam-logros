@@ -168,9 +168,9 @@ select{background:#111;border:1px solid var(--b);border-radius:10px;padding:8px}
 // ===== CONFIG: tu Gist (siempre la última versión) =====
 const GIST="https://gist.githubusercontent.com/Cioccolatuu/5a48a8fdfd3590ee577e81916d0f0c7a/raw/";
 const CUENTAS=[{id:"cioccolatuu",nombre:"cioccolatuu"},{id:"habukyy",nombre:"habukyy"}];
-const SPOTIFY="";   // pega aquí el enlace normal de tu playlist de Spotify (el de "Compartir")
+const SPOTIFY="https://open.spotify.com/playlist/2QpUvxEgR1xYpS8PL244FU";   // enlace normal de la playlist (el de "Compartir")
 const REPO="Cioccolatuu/steam-logros";
-const FOTOS=[];     // opcional: las fotos de la carpeta "fotos" del repositorio se detectan solas
+const FOTOS=["fotos/IMG_7500.jpg","fotos/IMG_7501.jpg","fotos/IMG_7502.jpg","fotos/IMG_7503.jpg","fotos/IMG_7504.jpg","fotos/IMG_7505.jpg","fotos/IMG_7506.jpg","fotos/IMG_7507.jpg","fotos/IMG_7509.jpg","fotos/IMG_7510.jpg","fotos/IMG_7511.jpg","fotos/IMG_7512.jpg","fotos/IMG_7513.jpg","fotos/IMG_7514.jpg","fotos/IMG_7515.jpg","fotos/IMG_7516.jpg","fotos/IMG_7517.jpg","fotos/IMG_7518.jpg","fotos/IMG_7519.jpg","fotos/IMG_7520.jpg"];     // respaldo: normalmente las fotos de la carpeta "fotos" se detectan solas
 const COL={cioccolatuu:"#39ff88",habukyy:"#ff4fd8"};
 const U=id=>`<span class="u-${id}">${id}</span>`;
 const OT=()=>S.cuenta==="cioccolatuu"?"habukyy":"cioccolatuu";
@@ -405,13 +405,27 @@ function showR(g){
   $("#rs").hidden=false;celebrate()}
 function closeR(){$("#rs").hidden=true}
 const spUrl=()=>SPOTIFY.replace(/^(https?:\/\/open\.spotify\.com\/)(?!embed)/,"$1embed/").split("?")[0];
-function spToggle(){const sp=$("#sp");sp.classList.toggle("min");const f=sp.querySelector(".spf");if(f.firstChild)return;
-  f.innerHTML=SPOTIFY?`<iframe title="Spotify" src="${esc(spUrl())}" width="100%" height="80" allow="encrypted-media" loading="lazy" style="border:0;border-radius:12px"></iframe>`:`<p class="sub" style="margin:8px">Aún no hay una playlist configurada.</p>`}
+let SPT=[],SPQ=[],SPL=false,SPOK=false,SPLAST={pos:0,dur:0};
+const spNext=()=>{if(!SPQ.length)SPQ=SPT.slice().sort(()=>Math.random()-.5);return"spotify:track:"+SPQ.pop()};   // aleatorio sin repetir hasta agotar la lista
+function spPlain(f){f.innerHTML=`<iframe title="Spotify" src="${esc(spUrl())}" width="100%" height="80" allow="encrypted-media" loading="lazy" style="border:0;border-radius:12px"></iframe>`}
+async function spToggle(){
+  const sp=$("#sp");sp.classList.toggle("min");const f=sp.querySelector(".spf");if(f.dataset.b)return;f.dataset.b="1";   // nada suena hasta que lo activas
+  if(!SPOTIFY){f.innerHTML=`<p class="sub" style="margin:8px">Aún no hay una playlist configurada.</p>`;return}
+  try{const r=await fetch(GIST+"playlist.json?t="+Date.now());if(r.ok)SPT=(await r.json()).tracks||[]}catch{}
+  if(SPT.length<2)return spPlain(f);   // sin lista de canciones: reproductor normal de la playlist
+  f.innerHTML=`<div id="spe"></div>`;
+  window.onSpotifyIframeApiReady=A=>A.createController($("#spe"),{uri:spNext(),width:"100%",height:80},c=>{SPOK=true;
+    c.addListener("ready",()=>c.play());
+    c.addListener("playback_update",e=>{const d=e.data||{};
+      if(!d.isPaused){SPLAST={pos:d.position,dur:d.duration};return}
+      if(!SPL&&SPLAST.dur>0&&SPLAST.dur-SPLAST.pos<3000){SPL=true;SPLAST={pos:0,dur:0};c.loadUri(spNext());setTimeout(()=>{c.play();SPL=false},1500)}})});   // al terminar una canción, sigue otra al azar
+  const sc=document.createElement("script");sc.src="https://open.spotify.com/embed/iframe-api/v1";sc.async=true;sc.onerror=()=>spPlain(f);document.body.appendChild(sc);
+  setTimeout(()=>{if(!SPOK)spPlain(f)},6000)}
 let PH=null;
 async function loadPhotos(){
-  if(PH)return PH;let l=FOTOS.slice();
+  if(PH)return PH;let l=[];
   if(!l.length){try{const r=await fetch("https://api.github.com/repos/"+REPO+"/contents/fotos");if(r.ok)l=(await r.json()).filter(f=>/\.(jpe?g|png|webp|gif)$/i.test(f.name)).map(f=>"fotos/"+encodeURIComponent(f.name))}catch{}}
-  return PH=l}
+  if(!l.length)l=FOTOS.slice();return PH=l}
 async function phShow(on){
   const el=$("#ph");el.classList.toggle("on",on);if(!on||el.dataset.b)return;el.dataset.b="1";
   const l=(await loadPhotos()).slice().sort(()=>Math.random()-.5),N=10,items=Array.from({length:N},(_,i)=>l.length?l[i%l.length]:"");
